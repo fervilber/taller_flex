@@ -1,0 +1,220 @@
+---
+title: "fer_app"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    self_contained: true
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+#library(readr)
+library(ggplot2)
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+#library(tidyverse)
+library(plotly)
+library(sf)
+```
+
+```{r}
+# lectura de los datos
+granja <- get(load('data/Granja.RData'))
+carrizal<- get(load('data/Carrizal.RData'))
+canizal<- get(load('data/Canizal.RData'))
+#granja$estacion<-"granja"
+
+# junto todo
+todo<-rbind(granja,carrizal,canizal)
+#solo estaciones
+estaciones<-rbind(granja[1,],carrizal[1,],canizal[1,])
+
+loc_estaciones<-estaciones[,c("estacion","latitud","longitud")]
+library("data.table")
+dt1<- as.data.table(todo)
+library(lubridate)
+dt1$year<-year(dt1$TIMESTAMP)
+#str(todo)
+#ejemplo de consulta con dt
+#head(dt1[Lluvia_Tot >1 & Vel_Viento_Max >10, .1:5,])
+```
+
+Lateral {.sidebar}
+=====================================
+
+### Barras de seleccion
+
+```{r}
+# shiny inputs defined here
+
+# Rate at which to flag high download traffic
+sliderInput("maxlect", "Maximo num filas leidas:",
+            min = 10, max = 500, value = 50, step = 10
+)
+# Maximum number of raw data rows to keep
+numericInput("maxrows", "valor fijo:", 50)
+
+selectInput('variable', 'Variable', names(todo))
+    
+selectInput('station', 'stacion', loc_estaciones[,1],
+                selected=loc_estaciones[1,1])
+
+#selectInput('year', 'stacion', unique(year(todo$TIMESTAMP)),multiple=T)
+
+selectInput('year', 'stacion', unique(dt1$year),multiple=F,selected = "2011")
+
+submitButton(text = "Apply Changes", icon = icon("refresh"))
+
+dateRangeInput("daterange3", "Date range:",
+                 start  = "2001-01-01",
+                 end    = "2010-12-31",
+                 min    = "2001-01-01",
+                 max    = "2012-12-21",
+                 format = "mm/dd/yy",
+                 separator = " - ")
+
+
+checkboxGroupInput("variable", "Variables to show:",loc_estaciones$estacion)
+                   
+#                     c("Cylinders" = "cyl",
+#                       "Transmission" = "am",
+#                       "Gears" = "gear")) 
+```
+
+Datos
+===========================
+
+Row
+-------------------------------------
+
+### Tabla de datos
+
+```{r }
+# no pueden verse todos los datos son muchos, hay que simplificar
+
+#datatable(head(todo), rownames = FALSE,extensions = 'FixedColumns', escape=TRUE, options= list(bPaginate = TRUE, dom = 't',buttons = c('excel')))
+
+#renderTable({
+#  head(todo,input$maxlect)
+#})
+
+library(DT)
+
+renderDT(
+  datatable(head(todo,input$maxlect),colnames = c('Date'=2,'ID' = 3)), options = list(
+    pageLength = 10)
+  )
+```
+
+
+Mapa
+===========================
+
+### Mapa
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+library(leaflet)
+# convertimos a numericos
+estaciones$latitud<-as.numeric(estaciones$latitud)
+estaciones$longitud<-as.numeric(estaciones$longitud)
+
+m <- leaflet(estaciones) %>% addTiles() # añade el mapa por defecto de OpenStreetMap
+    # añadimos Una capa de marcas con los datos 
+    # la capa tendrá una popup con el texto marcado
+    
+    
+# otra opcion de dibujo    
+#install.packages("leafpop")
+library(leafpop)
+    new <- c("red", "green","blue")
+icons <- awesomeIcons(
+  icon = 'ios-close',
+  iconColor = 'black',
+  library = 'ion',
+  markerColor = new
+)    
+m1 <-leaflet(estaciones) %>% addProviderTiles("CartoDB.Positron") 
+
+m1 %>% addAwesomeMarkers(lng= ~longitud, lat= ~latitud, icon=icons,
+                    popup= ~estacion,
+                    label= ~estacion,
+                    labelOptions = labelOptions(noHide = T))  
+
+#  addLayersControl(
+#    baseGroups = c("Toner", "Terreno"), # mapas base
+#    overlayGroups = c("Red", "Puntos"), # capas
+#    options = layersControlOptions(collapsed = FALSE)
+#  )
+```
+
+> Mapa 
+
+
+Graficas
+===========================
+
+
+### tabla de rhandsontable
+
+```{r}
+library(rhandsontable)
+DF = data.frame(int = 1:100,
+                numeric = rnorm(10),
+                logical = TRUE,
+                character = LETTERS[1:10],
+                fact = factor(letters[1:10]),
+                date = seq(from = Sys.Date(), by = "days", length.out = 10),
+                stringsAsFactors = FALSE)
+
+# add a sparkline chart
+#DF$chart = sapply(1:10, function(x) jsonlite::toJSON(list(values=rnorm(10))))
+
+output$tb1 = renderRHandsontable({
+  rhandsontable(DF, width = 600,height = 250) %>%  hot_rows(rowHeights = 50, fixedRowsTop = 1)
+})
+
+rHandsontableOutput("tb1") 
+
+#renderDT(                                                   
+#rhandsontable(DF)
+              #, rowHeaders = NULL) 
+#  %>%  hot_col("chart", renderer = htmlwidgets::JS("renderSparkline"))
+#)
+
+```
+
+
+### PTO LUMBRERAS
+```{r}
+#library(dplyr)
+#dt1<-rename(todo, date = TIMESTAMP, ws = VV_media, wd = DV_media)
+#head(dt1)
+#str(todo)
+
+#lluvia_y<-aggregate(Lluvia_Tot ~ year + estacion, dt1, sum)
+#lluvia_y<-dt1[year=="2011", .(Lluvia_Tot = sum(Lluvia_Tot)), by = .(year,estacion)]
+
+# imprimir
+library(ggplot2)
+
+renderPlot({
+  lluvia_y<-dt1[year==input$year, .(Lluvia_Tot = sum(Lluvia_Tot)), by = .(year,estacion)]
+  
+  grf<-ggplot(lluvia_y,aes(x=estacion,y=Lluvia_Tot, fill=estacion))+
+  geom_bar(stat="identity", position=position_dodge())+
+  labs(title = paste("lluvia año:"))
+#ggplot(lluvia_y,aes(x=as.factor(year),y=Lluvia_Tot, fill=estacion)) +
+#  geom_bar(stat="identity", position=position_dodge())+
+#geom_text(aes(label=Lluvia_Tot), vjust=1.6, color="white",
+#            position = position_dodge(0.9), size=3.5)+
+#  scale_fill_brewer(palette="Paired")+
+#  theme_minimal()
+  
+  ggplotly(grf)
+})  
+```
+
+

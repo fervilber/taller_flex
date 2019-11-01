@@ -1,0 +1,42 @@
+---
+title: "app2"
+name: "mapp1"
+output_dir: docs
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+```
+
+
+Datos
+===========================
+
+Column {data-width=650}
+--------------------------
+
+### Grafico 1
+
+```{r}
+plot(1:10)
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+
+```
+
+### Chart C
+
+```{r}
+
+```
+

@@ -1,0 +1,249 @@
+---
+title: "AcuaMed Aguilas"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    self_contained: true
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+#library(readr)
+library(ggplot2)
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+#library(tidyverse)
+library(plotly)
+library(sf)
+```
+
+```{r}
+# lectura de los datos
+granja <- get(load('data/Granja.RData'))
+carrizal<- get(load('data/Carrizal.RData'))
+canizal<- get(load('data/Canizal.RData'))
+#granja$estacion<-"granja"
+# junto todo
+todo<-rbind(granja,carrizal,canizal)
+#solo estaciones
+estaciones<-rbind(granja[1,],carrizal[1,],canizal[1,])
+
+loc_estaciones<-estaciones[,c("estacion","latitud","longitud")]
+
+```
+
+Datos
+===========================
+
+Column {data-width=600}
+---------------------
+
+### Mapa
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+library(leaflet)
+# convertimos a numericos
+estaciones$latitud<-as.numeric(estaciones$latitud)
+estaciones$longitud<-as.numeric(estaciones$longitud)
+
+m <- leaflet(estaciones) %>% addTiles() # añade el mapa por defecto de OpenStreetMap
+    # añadimos Una capa de marcas con los datos 
+    # la capa tendrá una popup con el texto marcado
+    m %>% addMarkers(lng=estaciones$longitud,
+                     lat=estaciones$latitud,
+                     label = ~estacion,
+                     labelOptions = labelOptions(noHide = T))  
+    
+    
+# otra opcion de dibujo    
+#install.packages("leafpop")
+library(leafpop)
+    new <- c("red", "green","blue")
+icons <- awesomeIcons(
+  icon = 'ios-close',
+  iconColor = 'black',
+  library = 'ion',
+  markerColor = new
+)    
+m1 <-leaflet(estaciones) %>% addProviderTiles("CartoDB.Positron") 
+
+m1 %>% addAwesomeMarkers(lng= ~longitud, lat= ~latitud, icon=icons,
+                    popup= ~estacion,
+                    label= ~estacion,
+                    labelOptions = labelOptions(noHide = T))  
+
+  addLayersControl(
+#    baseGroups = c("Toner", "Terreno"), # mapas base
+#    overlayGroups = c("Red", "Puntos"), # capas
+#    options = layersControlOptions(collapsed = FALSE)
+  )
+```
+
+> Mapa red distribución Águilas
+
+Column {data-width=400}
+---------------------
+
+### Distribución del agua producto
+
+```{r eval=FALSE}
+# Ejemplo de diagrama de flujo SANKEY
+ library(networkD3)      # cargamos librería
+ # Definimos los nodos de la red, que se numeran automáticamente de 0 a ..
+ nodes = data.frame("name" = 
+                   c("PLanta Desaladora",     # Node 0
+                     "Bombeo 2",  # Node 1
+                     "Embalse Cerro Colorado",  # Node 2
+                     "Salinares",         # Nodo 3
+                     "C.RR Lorca",# Nodo 4
+                     "C.RR Pulpí",  # Nodo 5
+                     "C.RR. Aguilas",  # Nodo 6
+                     "Ayt. Puerto Lumbreras", # Nodo 7
+                     "MCT"
+                   ))
+ # Definimos ahora los flujos en la forma
+ # nodo origen, nodo final, cantidad de flujo
+ links = as.data.frame(matrix(c(
+                        0, 1, 43, # desde, a, cuanto
+                        0, 3, 10, 
+                        0, 6, 2,
+                        1, 2, 38,
+                        1, 5, 3,
+                        1, 6, 2,
+                        2,4,25,
+                        2,7,10,
+                        2,8,3),
+ byrow = TRUE, ncol = 3))
+ # nombramos las columnas con los nombres estándar de la librería networkD3
+  names(links) = c("source", "target", "value")
+  # Llamamos a la funcion de dibujo del diagrama
+  sankeyNetwork(Links = links, Nodes = nodes,
+          Source = "source", Target = "target",
+          Value = "value", NodeID = "name",
+          fontSize= 10, nodeWidth = 50,nodePadding = 10,
+          colourScale = JS("d3.scaleOrdinal(d3.schemeCategory10);"
+          )
+  ) 
+```
+
+> distribucion de Aguilas
+
+### Red distribución
+
+```{r eval=FALSE}
+#library(igraph)
+# tabla de enlaces
+  enlaces<-data.frame(stringsAsFactors=FALSE,
+            from = c(16, 1, 1, 14, 14, 1, 14, 14, 1, 13, 13, 13, 14, 1, 15, 1),
+              to = c(15, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 1, 16))
+
+# tabla de nodos
+  nodos<-data.frame(stringsAsFactors=FALSE,
+         to = c(15, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 1, 16),
+         punto_destino = c("Captacion planta", "C.RR.AGUILAS", "Balsa Salinares",
+                     "Fuente Pobre", "Toma nueva C.RR.A",
+                     "C.RR.PULPI 1", "C.RR.PULPI bombeo", "C.RR.PULPI 2", "MCT",
+                     "C.RR.PTO.LUMBRERAS 1", "C.RR.TOTANA 2", "C.RR.PTO.LUMBRERAS", "Embalse ELVIRAS", "Bombeo PTO.LUMBRERAS",
+                     "Producto planta", "Mar"),
+         Volumen = c("12155.437", "64.585", "682.884", "442.198", "307.868",
+                     "125.661", "453.680", "384.699", "0.000", "685.458", "272.581",
+                     "1942.262", "2900.301", "4614.407", "5361.876", "6793.561"),
+           Grupo = c("PLANTA", "C.RR.A", "C.RR.A", "C.RR.A", "C.RR.A",
+                     "C.RR.P", "C.RR.P", "C.RR.P", "Ayuntamiento", "C.RR.L",
+                     "C.RR.L", "C.RR.T", "C.RR.L", "C.RR.L", "PLANTA", "PLANTA"))
+
+# convierto en hm3 la variable de volumen
+    nodos$Volumen<-as.numeric(nodos$Volumen)/1000
+
+# Creo la red con la función graph_from_data_frame
+#  red <- graph_from_data_frame(enlaces, directed=TRUE, vertices=nodos)
+
+# vemos la estructura e= enlaces o edge, v= vertices o nodos  
+  #print(red, e=TRUE, v=TRUE)  
+#colrs <- c("gray50", "tomato", "gold", "orange", "green","lightblue")
+# creamos una variable con los colores en los vertices
+#V(red)$color<-colrs[as.factor(nodos$Grupo)]
+#V(red_aguilas)$label<-"" #Paste0(punto_destino$nombre,"f")
+# tambien creamos otra variable para eltamñano del nodo que dependa del volumen
+#V(red)$size <- nodos$Volumen
+    
+# para conservar la forma, se puede dar un formato específico con  layout_with... y varias opciones    
+#l <- layout_with_fr(red)   
+
+#    plot(red,layout=l,main="Distribución agua en la red - feb 2019",
+#        vertex.label= paste(nodos$punto_destino,"\n",signif(nodos$Volumen,digits=2),"Hm3"),
+#        vertex.label.cex=.7, 
+#        vertex.label.color="black", # V(red)$color,
+#        vertex.color= V(red)$color,
+#        vertex.size=nodos$Volumen*2,
+#        edge.color=V(red)$color,
+#        edge.curved=.1,
+#        edge.width=nodos$Volumen*2
+#        )
+# añadimos la leyenda
+#legend(x=-1.1, y=-1,levels(as.factor(nodos$Grupo)), pch=21,
+#       col="#777777", pt.bg=colrs, pt.cex=2, cex=.8, bty="n", ncol=1)
+
+# nueva revision con el paquete visnetwork
+require(visNetwork, quietly = TRUE)
+# minimal example
+#vignette("Introduction-to-visNetwork")
+nodes <- nodos
+#nodes$id<-nodes$to
+names(nodes)<-c("id","label","value","group")
+nodes$title<-paste0("<p>Volumen:", nodes$value," hm3</p>")
+edges <- enlaces#data.frame(from = c(1,2), to = c(1,3))
+edges$value<-nodes$value
+visNetwork(nodes, edges, width = "100%") %>% visLegend()  %>% visEdges(arrows = "to") %>% visOptions(highlightNearest = list(enabled =TRUE, degree = 1))
+```
+
+Usuarios
+===========================
+
+Column {data-width=500}
+---------------------
+
+### C.RR de Aguilas
+
+```{r}
+   
+
+    gf1<-plot(1:123)
+    ggplotly(gf1)
+```
+
+### PTO LUMBRERAS
+
+
+
+Column {data-width=500}
+---------------------
+
+### LORCA
+
+
+Fotografías
+===========================
+
+Column {data-width=200}
+---------------------
+
+  - [feb_2019]()
+  - [ene_219]()
+  - [produccion](#produccion)
+  - [usuarios](#usuarios)
+
+Column {data-width=800}
+---------------------
+
+### Planta
+
+```{r, eval=FALSE,echo=FALSE, out.width="80%"}
+# pintamos todas las imagenes
+    library(knitr)
+    myimages<-list.files("imag/", pattern = ".jpg", full.names = TRUE)
+    include_graphics(myimages)
+```
