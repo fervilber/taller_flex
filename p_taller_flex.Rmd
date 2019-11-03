@@ -1,0 +1,240 @@
+---
+title: "Shiny fácil con flexdashboard"
+subtitle: "Cómo crear app web dinámicas con R "
+author: " "
+date: " `r Sys.Date()`"
+institute: " `r icon::fa_rocket(animate = 'spin')` Fernando Villalba Bergado"
+output:
+    xaringan::moon_reader:
+     transition: slide
+     lib_dir: libs
+     css:
+      - default
+      - default-fonts 
+      - "animate.min.css"   
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+layout: true
+background-image: url(imag/logoR.png)
+background-position: 98% 1% 
+background-size: 5%
+
+```{r setup, include=FALSE}
+#<div class="my-footer"><span>www.enRdados.net</span></div> 
+options(htmltools.dir.version = FALSE)
+library("xaringan")
+# https://yihui.name/en/2017/08/why-xaringan-remark-js/
+# para verolo en directo
+#  xaringan::inf_mr()
+#https://yihui.name/en/2019/02/ultimate-inf-mr/
+# https://slides.yihui.name/xaringan/#8
+# https://yihui.name/en/2017/08/why-xaringan-remark-js/
+# para guardar la presentacion como pdf
+# necesito el paquete pagedown y chrome instalado en el PC
+# pagedown::chrome_print("C:/R/proyectos/mentoring/pMentoring3.html")
+```
+
+
+---
+class: animated, fadeInRight
+
+# ¿que vamos a ver?
+
+- `r icon::fa('arrow-alt-circle-right')` descripcion de flexdashboard.
+
+- `r icon::fa('arrow-alt-circle-right')` Diseño de tableros 
+ 
+- interactuación simple
+ 
+- interactuacion compleja sin servidor
+ 
+- interactuar con servidor == shiny
+
+1. que son los tableros
+2. Diseño de tableros 
+3. Insertar componentes
+4. Interactividad
+5. flexdashboard vs. shinydashboard
+
+
+```{r echo=FALSE, out.width = "600px", out.height="200px",fig.align='center'}
+knitr::include_graphics("imag/mentoring.jpg")
+```
+
+---
+class: animated, fadeInLeft
+
+# formatos, empezar aplicacion 
+
+Lo primero es diseñar el espacio de visualiación. Con flex tenemos unas opciones muy simples
+
+
+* encabezado YAML
+
+* niveles: 
+
+ * Pestañas #  o  `===`
+ 
+ * Columnas ##  o `---`  {.sidebar} {.tabset}
+
+ * Cajas ###  (pueden ser filas columnas o pestañas)
+
+---
+
+class: inverse, center, middle
+
+# interactividad simple
+
+```{r echo=FALSE, fig.align='center', out.width = "600px", out.height="400px"}
+knitr::include_graphics("imag/puertas.jpg")
+```
+
+--
+
+El mentoring es la `r icon::fa('key')` para abrir muchas `r icon::fa('door-open')`
+
+---
+class: animated, jackInTheBox
+
+# Objetivos del programa
+
+- Acelerar el proceso de desarrollo personal `r icon::fa('rocket')`
+- Favorece la transmisión de valores y conocimiento `r icon::fa('people-carry')`
+- Transmitir experiencia `r icon::fa('user-graduate')`
+- Crea vínculos personales, profesionales y de colectivo.`r icon::fa('handshake')`
+- Motiva, mejora la confianza y refuerza la iniciativa personal. `r icon::fa('award')`
+
+```{r echo=FALSE, out.width = "500px", out.height="250px",fig.align='center'}
+knitr::include_graphics("imag/civileng.jpg")
+```
+---
+class: inverse, animated, fadeInLeft
+
+# Objetivos del programa II
+
+* `r icon::fa('user-friends')` Actuar sobre vuestras habilidades blandas  
+
+* `r icon::fa('hand-holding-usd')` La carrera te aporta conocimientos técnicos, el mentoring otras habilidades complementarias
+
+```{r echo=FALSE, fig.align='center', out.width = "600px", out.height="400px"}
+knitr::include_graphics("imag/competencias_soft_competencias_hard_infografia.png")
+```
+
+
+---
+class: inverse,animated, fadeInLeft
+
+# ¿Quíenes intervienen?
+
+.pull-left[
+
+# Mentor
+
+- Facilita el desarrollo del **pupilo**, a través del intercambio de sus propios recursos, conocimientos, valores, habilidades, perspectivas, actitudes y competencias.
+
+- Le ofrece la oportunidad de desarrollar nuevas perspectivas, *hacerse preguntas*, conocer otras inquietudes y ampliar su visión  personal y profesional.
+
+
+]
+
+.pull-right[
+# Pupilo
+
+- El **pupilo** desarrollará habilidades y conocimientos que le ayudarán a alcanzar las metas que *él mismo defina*.
+
+```{r echo=FALSE, out.width = "500px", out.height="200px"}
+knitr::include_graphics("imag/jodaLuke.jpg")
+```
+]
+
+---
+
+# Habilidades requeridas
+.pull-left[
+# Mentor
+- Escucha activa
+- Construcción gradual de confianza
+- Definición de objetivos y desarrollo de capacidades
+- Dar soporte e inspiración
+- Ser ejemplo
+
+```{r echo=FALSE, out.width = "500px", out.height="200px"}
+knitr::include_graphics("imag/Karate-Kid.jpg")
+```
+
+]
+.pull-right[
+# Pupilo
+- Escucha activa
+- Voluntad de aprendizaje
+- Construcción gradual de confianza
+- Definir objetivos
+- **Proactividad**
+
+
+```{r echo=FALSE, fig.align='center', out.width = "200px", out.height="200px"}
+knitr::include_graphics("imag/leongato.jpg")
+```
+
+]
+---
+class: animated, jackInTheBox
+
+# Recursos
+
+* https://github.com/rstudio-education/shiny-wsds18/blob/master/04-dashboards/04-dashboards.pdf
+* http://arm.rbind.io/slides/flexdashboard.html#1
+
+* https://jenthompson.me/resources/
+* https://rstudio-education.github.io/shiny-wsds18/
+* https://github.com/jmcphers/flexdashboard-talk/blob/master/flexdashboards.Rmd
+* https://github.com/rstudio-education/shiny-wsds18/blob/master/02-reactivity/02-reactivity.pdf
+
+* https://github.com/rstudio-education/arm-workshop-rsc2019
+* iconos en :https://fontawesome.com/icons?d=gallery&q=gra&m=free
+* https://ionicons.com/
+* http://www.htmlwidgets.org/
+
+---
+
+background-image: url(imag/fondo6.jpg)
+background-size: cover
+
+# diferencias entre Shiny vs Flexdashboard
+
+.pull-left[
+
+## shiny
+ 
+- Codigo especifico UI
+- no muy fácil
+- dinámico
+- Bootstrap
+
+]
+
+.pull-right[
+
+##Flexdashboard
+
+- Rmarkdown
+-super facil
+- dinámico o estático
+- CSS
+]
+
+---
+class: inverse, center, middle,animated, jackInTheBox
+
+# Si tienes talento, no lo uses para llegar más lejos, úsalo para llegar más acompañado
+
+Muchas Gracias!!
+
+`r icon::fa('paper-plane')`
+

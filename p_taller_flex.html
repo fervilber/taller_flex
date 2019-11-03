@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Shiny fácil con flexdashboard</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="" />
+    <meta name="date" content="2019-11-03" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/fontawesome-all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="animate.min.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Shiny fácil con flexdashboard
+## Cómo crear app web dinámicas con R
+### <i class="fas  fa-rocket fa-spin "></i> Fernando Villalba Bergado
+### 2019-11-03
+
+---
+
+
+layout: true
+background-image: url(imag/logoR.png)
+background-position: 98% 1% 
+background-size: 5%
+
+
+
+
+---
+class: animated, fadeInRight
+
+# ¿que vamos a ver?
+
+ <i class="fas  fa-arrow-alt-circle-right "></i> descripcion de flexdashboard.
+
+ <i class="fas  fa-arrow-alt-circle-right "></i> Diseño de tableros 
+ 
+ interactuación simple
+ 
+ interactuacion compleja sin servidor
+ 
+ interactuar con servidor == shiny
+
+
+&lt;img src="imag/mentoring.jpg" width="600px" height="200px" style="display: block; margin: auto;" /&gt;
+
+---
+class: animated, fadeInLeft
+
+# formatos, empezar aplicacion 
+
+Lo primero es diseñar el espacio de visualiación. Con flex tenemos unas opciones muy simples
+
+
+* encabezado YAML
+
+* niveles: 
+
+* Pestañas #  o  `===`
+
+* Columnas ##  o `---`  {}
+
+* Cajas ###
+
+---
+
+class: inverse, center, middle
+
+# interactividad simple
+
+&lt;img src="imag/puertas.jpg" width="600px" height="400px" style="display: block; margin: auto;" /&gt;
+
+--
+
+El mentoring es la <i class="fas  fa-key "></i> para abrir muchas <i class="fas  fa-door-open "></i>
+
+---
+class: animated, jackInTheBox
+
+# Objetivos del programa
+
+- Acelerar el proceso de desarrollo personal <i class="fas  fa-rocket "></i>
+- Favorece la transmisión de valores y conocimiento <i class="fas  fa-people-carry "></i>
+- Transmitir experiencia <i class="fas  fa-user-graduate "></i>
+- Crea vínculos personales, profesionales y de colectivo.<i class="fas  fa-handshake "></i>
+- Motiva, mejora la confianza y refuerza la iniciativa personal. <i class="fas  fa-award "></i>
+
+&lt;img src="imag/civileng.jpg" width="500px" height="250px" style="display: block; margin: auto;" /&gt;
+---
+class: inverse, animated, fadeInLeft
+
+# Objetivos del programa II
+
+* <i class="fas  fa-user-friends "></i> Actuar sobre vuestras habilidades blandas  
+
+* <i class="fas  fa-hand-holding-usd "></i> La carrera te aporta conocimientos técnicos, el mentoring otras habilidades complementarias
+
+&lt;img src="imag/competencias_soft_competencias_hard_infografia.png" width="600px" height="400px" style="display: block; margin: auto;" /&gt;
+
+
+---
+class: inverse,animated, fadeInLeft
+
+# ¿Quíenes intervienen?
+
+.pull-left[
+
+# Mentor
+
+- Facilita el desarrollo del **pupilo**, a través del intercambio de sus propios recursos, conocimientos, valores, habilidades, perspectivas, actitudes y competencias.
+
+- Le ofrece la oportunidad de desarrollar nuevas perspectivas, *hacerse preguntas*, conocer otras inquietudes y ampliar su visión  personal y profesional.
+
+
+]
+
+.pull-right[
+# Pupilo
+
+- El **pupilo** desarrollará habilidades y conocimientos que le ayudarán a alcanzar las metas que *él mismo defina*.
+
+&lt;img src="imag/jodaLuke.jpg" width="500px" height="200px" /&gt;
+]
+
+---
+
+# Habilidades requeridas
+.pull-left[
+# Mentor
+- Escucha activa
+- Construcción gradual de confianza
+- Definición de objetivos y desarrollo de capacidades
+- Dar soporte e inspiración
+- Ser ejemplo
+
+&lt;img src="imag/Karate-Kid.jpg" width="500px" height="200px" /&gt;
+
+]
+.pull-right[
+# Pupilo
+- Escucha activa
+- Voluntad de aprendizaje
+- Construcción gradual de confianza
+- Definir objetivos
+- **Proactividad**
+
+
+&lt;img src="imag/leongato.jpg" width="200px" height="200px" style="display: block; margin: auto;" /&gt;
+
+]
+---
+class: animated, jackInTheBox
+
+# Etapas de un programa mentoring
+
+ Lo primero es tener un entorno de desarrollo favorable dentro de la empresa, colegio profesional...después:
+
+<i class="fas  fa-thumbs-up "></i> **Construcción de la relación entre mentor y pupillo** 
+
+<i class="fas  fa-thumbs-up "></i> **Intercambio de información y fijación de metas**
+
+<i class="fas  fa-thumbs-up "></i> **Definir trabajos y acciones para lograr los objetivos**
+
+<i class="fas  fa-thumbs-up "></i> **Fin del programa mentoring y planificación de futuro**
+
+&lt;img src="imag/montana.jpg" width="700px" height="200px" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Desarrollo del I programa mentór CICCP Murcia
+
+- Análisis de los perfiles y emparejamientos
+
+--
+
+- 2 jornadas con talleres grupales
+
+--
+
+- 2 meses de relaciones mentor y pupilo (la meta es tener al menos 5 encuentros con el mentor durante el programa de 9 semanas)
+
+- Seguimiento continuo por parte del coordinador
+
+--
+
+- Clausura y exposición final.
+
+---
+
+background-image: url(imag/fondo6.jpg)
+background-size: cover
+
+# diferencias entre Shiny vs Flexdashboard
+
+.pull-left[
+
+## shiny
+ 
+- Codigo especifico UI
+- no muy fácil
+- dinámico
+- Bootstrap
+
+]
+
+.pull-right[
+
+##Flexdashboard
+
+- Rmarkdown
+-super facil
+- dinámico o estático
+- CSS
+]
+
+---
+class: inverse, center, middle,animated, jackInTheBox
+
+# Si tienes talento, no lo uses para llegar más lejos, úsalo para llegar más acompañado
+
+Muchas Gracias!!
+
+<i class="fas  fa-paper-plane "></i>
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create();
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

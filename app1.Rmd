@@ -1,32 +1,160 @@
 ---
-title: "app1"
-author: "FVB"
-date: "1/11/2019"
-output: html_document
-name: "mapp1"
-output_dir: docs
+title: "flexdashboard + shiny"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    logo: "imag/logoR.png"
+    social: menu
+    source_code: embed
+    theme: united
+    favicon: " `r icon::fa_rocket()`"
+runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+library(flexdashboard)
+library(tidyverse)
 ```
 
-## R Markdown
+# holamundo {data-icon="fa-calendar"} 
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+## {.sidebar}
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+Esto es el sidebar
 
-```{r cars}
-summary(cars)
+## componentes
+
+### fer 
+```{r}
+#plot(cars)
+library(dygraphs)
+dygraph(ldeaths)
 ```
 
-## Including Plots
+> grafico con dygraphs
 
-You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+### Graficos
+
+```{r}
+
+contador<-34
+valueBox(contador,
+         icon ="fa-comments",
+         caption ="contador de visitas")
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+### otro
+
+```{r}
+spam <- 12
+valueBox(spam, 
+         icon = "fa-trash",
+         color = ifelse(spam > 10, "warning", "primary"))
+```
+
+
+# Graficas {data-icon="fa-users"} 
+
+## Column {data-width=650}
+
+
+### Scatterplot of weight and miles per gallon
+
+```{r}
+mpg_subset <- reactive({
+  mtcars %>%
+    filter(
+      hp >= input$hp[1],
+      hp <= input$hp[2],
+      cyl %in% input$cyl
+    )
+})
+renderPlot({
+  ggplot(mpg_subset(), aes(x = wt, y = mpg, color = factor(cyl))) +
+    geom_point(size=4)
+})
+```
+
+> ejemplo 3
+
+
+Column {data-width=350}  
+-----------------------------------------------------------------------
+
+### Inputs
+
+```{r}
+checkboxGroupInput("cyl", "Cylinders", choices = c("4", "6", "8"),
+                   selected = c("4", "6", "8"), inline = TRUE
+                   )
+sliderInput("hp", "Horsepower",
+            min = min(mtcars$hp), max = max(mtcars$hp),
+            value = range(mtcars$hp)
+            )
+radioButtons("plot_type", "Weight plot type", 
+             choices = c("Histogram", "Violin plot"), selected = c("Histogram"))
+
+
+
+```
+
+### Histogram of weight
+
+```{r}
+renderPlot({
+  
+  if(input$plot_type == "Histogram"){
+    ggplot(mpg_subset(), aes(x = wt)) +
+      geom_histogram(binwidth = 0.25) +
+      coord_cartesian(xlim = range(mtcars$wt)) 
+  }
+  else {
+    ggplot(mpg_subset(), aes(y = wt, x = factor(1))) +
+      geom_violin()
+  }
+    
+})
+```
+
+# Bolsa {data-icon="fa-signal"} 
+
+## {.sidebar}
+
+
+```{r}
+checkboxGroupInput("cyl", "Cylinders", choices = c("4", "6", "8"),
+                   selected = c("4", "6", "8"), inline = TRUE
+                   )
+sliderInput("hp", "Horsepower",
+            min = min(mtcars$hp), max = max(mtcars$hp),
+            value = range(mtcars$hp)
+            )
+radioButtons("plot_type", "Weight plot type", 
+             choices = c("Histogram", "Violin plot"), selected = c("Histogram"))
+
+#library(dygraphs)
+library(quantmod)
+#library(flexdashboard)
+
+getSymbols(c("MSFT", "HPQ", "INTC"), from = "2014-01-01", auto.assign=TRUE)
+```
+
+## Graficos
+
+
+### Microsoft
+
+```{r}
+dygraph(MSFT[,2:4], group = "stocks") %>% 
+  dySeries(c("MSFT.Low", "MSFT.Close", "MSFT.High"), label = "MSFT")
+
+```
+
+### HPQ
+
+```{r}
+dygraph(HPQ[,2:4], group = "stocks") %>% 
+  dySeries(c("HPQ.Low", "HPQ.Close", "HPQ.High"), label = "HPQ")
+```
