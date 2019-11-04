@@ -3,8 +3,7 @@
   <head>
     <title>Shiny fácil con flexdashboard</title>
     <meta charset="utf-8" />
-    <meta name="author" content="" />
-    <meta name="date" content="2019-11-03" />
+    <meta name="date" content="2019-11-04" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
     <link href="libs/font-awesome/css/fontawesome-all.min.css" rel="stylesheet" />
@@ -17,7 +16,7 @@ class: center, middle, inverse, title-slide
 # Shiny fácil con flexdashboard
 ## Cómo crear app web dinámicas con R
 ### <i class="fas  fa-rocket fa-spin "></i> Fernando Villalba Bergado
-### 2019-11-03
+### 2019-11-04
 
 ---
 
@@ -35,42 +34,125 @@ class: animated, fadeInRight
 
 # ¿que vamos a ver?
 
- <i class="fas  fa-arrow-alt-circle-right "></i> descripcion de flexdashboard.
+- <i class="fas  fa-arrow-alt-circle-right "></i> ¿qué es `flexdashboard`?
 
- <i class="fas  fa-arrow-alt-circle-right "></i> Diseño de tableros 
+- <i class="fas  fa-arrow-alt-circle-right "></i> Diseño de tableros 
  
- interactuación simple
+- **Práctica 1**: Crear tablero estático
  
- interactuacion compleja sin servidor
- 
- interactuar con servidor == shiny
+- Iteractividad I
+
+- **Práctica 2**: Crear tablero dinámico 
+
+- Iteractividad II (*Shiny* - servidores)
+
+- **Práctica 3**: Crear app dinámica 
+
+- Diseño avanzado y publicación
+
+- **Práctica 4**: Crear app completa y publicarla en Internet 
+
+
+1. que son los tableros
+2. Diseño de tableros 
+3. Insertar componentes
+4. Interactividad
+5. flexdashboard vs. shinydashboard
 
 
 &lt;img src="imag/mentoring.jpg" width="600px" height="200px" style="display: block; margin: auto;" /&gt;
 
 ---
+
+#¿qué es `flexdashboard`?
+
+*flexdashboard* es una extensión de *RMarkdown* que ha desarrollado RSTUDIO para facilitar la generación de aplicaciones o informes web, denominados genéricamente tableros.
+El manual básico está en &lt;https://rmarkdown.rstudio.com/flexdashboard/&gt;
+
+Estos tableros pueden ser estáticos o dinámicos según la forma de interacción con el cliente -servidor de datos.
+
+---
+
+# Creacción de tableros 
+
+Se crean como un fichero rmarkdown *.Rmd. Una vez cargada la librería puede obtenerse desde la plantilla de RSTUDIO.
+
+Como  todos los ficheros Rmd, cuentan con un encabezado YAML en el que se definen los parámetros generales de salida, y el resto es código rmarkdown.
+
+
+---
+
+# Encabezado YAML de flexdashboard
+
+```YAML
+---
+title: "Mi primer tablero"
+output:
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    logo: "imag/logoR.png"
+    social: menu
+    source_code: embed
+    theme: united
+   # css: bootswatch-3.3.5-4/flatly/bootstrap.css
+runtime: shiny
+---
+
+```
+
+---
 class: animated, fadeInLeft
 
-# formatos, empezar aplicacion 
+# Formato 
 
-Lo primero es diseñar el espacio de visualiación. Con flex tenemos unas opciones muy simples
+Cualquier aplicación la crearemos a partir de 3 niveles o formatos específicos 
 
+* Niveles: 
 
-* encabezado YAML
+  1. Pestañas #  o  `===`
+ 
+  2. Columnas o filas ##  o `---`  {.sidebar} {.tabset}
 
-* niveles: 
+  3. Cajas ###  (pueden ser filas columnas o pestañas)
 
-* Pestañas #  o  `===`
+Dentro de una caja de nivel 3 podremos usar código rmarkdown normal y corriente o trozos de código R en formato habitual en Rmarkdown es decir entrecomillado  `\(```{r}\)` y `\(```\)`.
 
-* Columnas ##  o `---`  {}
+---
 
-* Cajas ###
+# Ejemplos de diseños de app
+
+Inserter ejemplos de diferentes diseños de aplicaciones
+
+```yaml
+---
+title: "Row Orientation"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+---
+    
+## Row
+
+### Chart 1
+    
+
+   
+## Row
+
+### Chart 2
+
+    
+### Chart 3
+
+```
+
 
 ---
 
 class: inverse, center, middle
 
-# interactividad simple
+# Interactividad simple
 
 &lt;img src="imag/puertas.jpg" width="600px" height="400px" style="display: block; margin: auto;" /&gt;
 
@@ -155,39 +237,20 @@ class: inverse,animated, fadeInLeft
 ---
 class: animated, jackInTheBox
 
-# Etapas de un programa mentoring
+# Recursos
 
- Lo primero es tener un entorno de desarrollo favorable dentro de la empresa, colegio profesional...después:
+* https://github.com/rstudio-education/shiny-wsds18/blob/master/04-dashboards/04-dashboards.pdf
+* http://arm.rbind.io/slides/flexdashboard.html#1
 
-<i class="fas  fa-thumbs-up "></i> **Construcción de la relación entre mentor y pupillo** 
+* https://jenthompson.me/resources/
+* https://rstudio-education.github.io/shiny-wsds18/
+* https://github.com/jmcphers/flexdashboard-talk/blob/master/flexdashboards.Rmd
+* https://github.com/rstudio-education/shiny-wsds18/blob/master/02-reactivity/02-reactivity.pdf
 
-<i class="fas  fa-thumbs-up "></i> **Intercambio de información y fijación de metas**
-
-<i class="fas  fa-thumbs-up "></i> **Definir trabajos y acciones para lograr los objetivos**
-
-<i class="fas  fa-thumbs-up "></i> **Fin del programa mentoring y planificación de futuro**
-
-&lt;img src="imag/montana.jpg" width="700px" height="200px" style="display: block; margin: auto;" /&gt;
-
----
-
-# Desarrollo del I programa mentór CICCP Murcia
-
-- Análisis de los perfiles y emparejamientos
-
---
-
-- 2 jornadas con talleres grupales
-
---
-
-- 2 meses de relaciones mentor y pupilo (la meta es tener al menos 5 encuentros con el mentor durante el programa de 9 semanas)
-
-- Seguimiento continuo por parte del coordinador
-
---
-
-- Clausura y exposición final.
+* https://github.com/rstudio-education/arm-workshop-rsc2019
+* iconos en :https://fontawesome.com/icons?d=gallery&amp;q=gra&amp;m=free
+* https://ionicons.com/
+* http://www.htmlwidgets.org/
 
 ---
 
@@ -216,6 +279,14 @@ background-size: cover
 - dinámico o estático
 - CSS
 ]
+
+---
+
+# Publicar la app
+
+Después de crear la app con shiny se puede alojar en &lt;ShinyApps.io&gt; es la opción más sencilla. La cuenta gratuita da derecho a 5 app en el servidor.
+
+Otras opciones son RSTUDIO connect, o crearse un servidor Shiny propio en el que publicar, pr ejemplo en mi blog teneis cómo hacerlo en AWS
 
 ---
 class: inverse, center, middle,animated, jackInTheBox

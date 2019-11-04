@@ -46,21 +46,25 @@ class: animated, fadeInRight
 
 # ¿que vamos a ver?
 
-- `r icon::fa('arrow-alt-circle-right')` descripcion de flexdashboard.
+- `r icon::fa('arrow-alt-circle-right')` ¿qué es `flexdashboard`?
 
-- `r icon::fa('arrow-alt-circle-right')` Diseño de tableros 
+- `r icon::fa('arrow-alt-circle-right')` Diseño de paneles (tableros)
  
-- interactuación simple
+- **Práctica 1**: Crear tablero estático
  
-- interactuacion compleja sin servidor
- 
-- interactuar con servidor == shiny
+- Iteractividad I 
 
-1. que son los tableros
-2. Diseño de tableros 
-3. Insertar componentes
-4. Interactividad
-5. flexdashboard vs. shinydashboard
+- htmlWidgets
+
+- **Práctica 2**: Crear tablero dinámico 
+
+- Iteractividad II (*Shiny* - servidores)
+
+- **Práctica 3**: Crear app dinámica 
+
+- Diseño avanzado y publicación
+
+- **Práctica 4**: Crear app completa y publicarla en Internet 
 
 
 ```{r echo=FALSE, out.width = "600px", out.height="200px",fig.align='center'}
@@ -68,28 +72,123 @@ knitr::include_graphics("imag/mentoring.jpg")
 ```
 
 ---
+
+#¿qué es `flexdashboard`?
+
+*flexdashboard* es una extensión de *RMarkdown* que ha desarrollado RSTUDIO para facilitar la generación de aplicaciones o informes web, denominados genéricamente tableros.
+El manual básico está en <https://rmarkdown.rstudio.com/flexdashboard/>
+
+Estos tableros pueden ser estáticos o dinámicos según la forma de interacción con el cliente -servidor de datos.
+
+---
+
+# ¿qué es un tablero?
+
+Estos son algunos ejemplos de tableros
+
+![dashboard-cartoon](dashboard-cartoon.jpg)
+![social-media](socialmedia-dashboard.png)
+
+---
+
+# Ejemplos de tableros
+
+![marketing](marketing-dashboard.png)
+
+<iframe src="wastelands.html" width="800" height="600">
+</iframe>
+
+---
+# ¿por qué usar R para esto?
+
+- Elimina pasos en la informacion, ya que el analista puede crear directamente y presentar los resultados como si fuese 
+- Facilita análisis presentación y comunicación
+- Eliminar al intermediario; capacitar a los analistas para producir paneles de nivel ejecutivo
+- Personalización prácticamente infinita
+
+
+---
+
+# Creacción de tableros 
+
+Se crean como un fichero rmarkdown *.Rmd. Una vez cargada la librería puede obtenerse desde la plantilla de RSTUDIO.
+
+Como  todos los ficheros Rmd, cuentan con un encabezado YAML en el que se definen los parámetros generales de salida, y el resto es código rmarkdown.
+
+
+---
+
+# Encabezado YAML de flexdashboard
+
+```YAML
+---
+title: "Mi primer tablero"
+output:
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    logo: "imag/logoR.png"
+    social: menu
+    source_code: embed
+    theme: united
+   # css: bootswatch-3.3.5-4/flatly/bootstrap.css
+runtime: shiny
+---
+
+```
+
+---
 class: animated, fadeInLeft
 
-# formatos, empezar aplicacion 
+# Formato 
 
-Lo primero es diseñar el espacio de visualiación. Con flex tenemos unas opciones muy simples
+Cualquier aplicación la crearemos a partir de 3 niveles o formatos específicos 
 
+* Niveles: 
 
-* encabezado YAML
-
-* niveles: 
-
- * Pestañas #  o  `===`
+  1. Pestañas #  o  `===`
  
- * Columnas ##  o `---`  {.sidebar} {.tabset}
+  2. Columnas o filas ##  o `---`  {.sidebar} {.tabset}
 
- * Cajas ###  (pueden ser filas columnas o pestañas)
+  3. Cajas ###  (pueden ser filas columnas o pestañas)
+
+Dentro de una caja de nivel 3 podremos usar código rmarkdown normal y corriente o trozos de código R en formato habitual en Rmarkdown es decir entrecomillado  $```{r}$ y $```$.
+
+---
+
+# Ejemplos de diseños de app
+
+Inserter ejemplos de diferentes diseños de aplicaciones
+
+```yaml
+---
+title: "Row Orientation"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+---
+    
+## Row
+
+### Chart 1
+    
+
+   
+## Row
+
+### Chart 2
+
+    
+### Chart 3
+
+```
+
 
 ---
 
 class: inverse, center, middle
 
-# interactividad simple
+# Interactividad simple
 
 ```{r echo=FALSE, fig.align='center', out.width = "600px", out.height="400px"}
 knitr::include_graphics("imag/puertas.jpg")
@@ -228,6 +327,14 @@ background-size: cover
 - dinámico o estático
 - CSS
 ]
+
+---
+
+# Publicar la app
+
+Después de crear la app con shiny se puede alojar en <ShinyApps.io> es la opción más sencilla. La cuenta gratuita da derecho a 5 app en el servidor.
+
+Otras opciones son RSTUDIO connect, o crearse un servidor Shiny propio en el que publicar, pr ejemplo en mi blog teneis cómo hacerlo en AWS
 
 ---
 class: inverse, center, middle,animated, jackInTheBox

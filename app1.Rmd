@@ -1,6 +1,6 @@
 ---
 title: "flexdashboard + shiny"
-output: 
+output:
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
@@ -8,13 +8,19 @@ output:
     social: menu
     source_code: embed
     theme: united
-    favicon: " `r icon::fa_rocket()`"
 runtime: shiny
 ---
+
+<script>
+$('.navbar-logo').wrap('<a href="http://www.enrdados.net" target=_blank>');
+</script>
 
 ```{r setup, include=FALSE}
 library(flexdashboard)
 library(tidyverse)
+#    favicon: " `r icon::fa_rocket()`"
+#    output_dir: "docs"
+
 ```
 
 # holamundo {data-icon="fa-calendar"} 
@@ -22,6 +28,10 @@ library(tidyverse)
 ## {.sidebar}
 
 Esto es el sidebar
+
+* [Bolsa](#Bolsa)
+* [Graficas](#g1)
+
 
 ## componentes
 
@@ -35,7 +45,7 @@ dygraph(ldeaths)
 > grafico con dygraphs
 
 
-### Graficos
+### Graficos 
 
 ```{r}
 
