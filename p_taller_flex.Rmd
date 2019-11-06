@@ -336,6 +336,19 @@ Después de crear la app con shiny se puede alojar en <ShinyApps.io> es la opci�
 
 Otras opciones son RSTUDIO connect, o crearse un servidor Shiny propio en el que publicar, pr ejemplo en mi blog teneis cómo hacerlo en AWS
 
+### webs estáticas o con crosstalk
+
+- mandar html
+- RPubs
+- Servidor propio
+
+### webs Shiny
+- shinyapp.io
+- AWS
+- RSTUDIOcloud
+- Serividor propio
+
+
 ---
 class: inverse, center, middle,animated, jackInTheBox
 

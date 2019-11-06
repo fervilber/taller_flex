@@ -1,7 +1,5 @@
 ---
 title: "app2"
-name: "mapp1"
-output_dir: docs
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
@@ -10,6 +8,10 @@ output:
 
 ```{r setup, include=FALSE}
 library(flexdashboard)
+library(prophet)
+library(lubridate)
+library(ggplot2)
+data<-read.csv(file.choose(), header = T)
 ```
 
 

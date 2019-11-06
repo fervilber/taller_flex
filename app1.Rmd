@@ -32,6 +32,30 @@ Esto es el sidebar
 * [Bolsa](#Bolsa)
 * [Graficas](#g1)
 
+```{r echo=FALSE}
+fileInput("file1", "Choose CSV File",
+                multiple = TRUE,
+                accept = c("text/csv",
+                         "text/comma-separated-values,text/plain",
+                         ".csv"))
+
+#inFile <- input$file1
+
+renderText({
+    if (is.null(input$file1)){
+      return(NULL)}
+    else{input$file1$name}
+       })
+#df_reac <- reactive({read_xlsx(file1$datapath)})
+
+passwordInput("clave","introduce clave")
+
+renderText({
+    if (is.null(input$clave)){
+      return(NULL)}
+    else{input$clave}
+       })
+```
 
 ## componentes
 
@@ -168,3 +192,28 @@ dygraph(MSFT[,2:4], group = "stocks") %>%
 dygraph(HPQ[,2:4], group = "stocks") %>% 
   dySeries(c("HPQ.Low", "HPQ.Close", "HPQ.High"), label = "HPQ")
 ```
+
+
+# crosstalk
+
+## mapa
+
+```{r}
+library(crosstalk)
+library(leaflet)
+library(DT)
+
+# Wrap data frame in SharedData
+sd <- SharedData$new(quakes[sample(nrow(quakes), 100),])
+
+# Create a filter input
+filter_slider("mag", "Magnitude", sd, column=~mag, step=0.1, width=250)
+
+# Use SharedData like a dataframe with Crosstalk-enabled widgets
+bscols(
+  leaflet(sd) %>% addTiles() %>% addMarkers(),
+  datatable(sd, extensions="Scroller", style="bootstrap", class="compact", width="100%",
+    options=list(deferRender=TRUE, scrollY=300, scroller=TRUE))
+)
+```
+

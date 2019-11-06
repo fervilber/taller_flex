@@ -1,0 +1,53 @@
+---
+geometry:
+- top=1in
+- bottom=1in
+- right=0.5in
+- left=1in
+output:
+  pdf_document: 
+    fig_crop: no
+  html_document: default
+---
+
+
+```{r echo=FALSE, fig.align='center', out.width = "50px", out.height="50px"}
+knitr::include_graphics("imag/Logo_enrdados_blanco.png.png")
+```
+
+# Shiny fácil con flexdashboard
+
+Cómo hacer aplicaciones web dinámicas con R.
+
+  * Fecha prevista: 29 de noviembre 2019
+
+## DESCRIPCION DEL TALLER
+[flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) es una extensión de *RMarkdown* creada por RSTUDIO para realizar informes web denominados genéricamente tableros (o paneles).
+
+En el taller, empezaremos por explorar la librería para comprender las enormes posibilidades que tiene.
+
+Haremos varias prácticas empezando por crear nuestro primer tablero simple y estático al que añadiremos complejidad y reactividad según avancemos conceptos y recursos.
+
+Al final crearemos una aplicación completa, dinámica, visualmente atractiva y con la base matemática avanzada de R, que además, publicaremos en Internet.
+
+Exploraremos entre otras cosas: cómo visualizar datos, gráficos y mapas de forma interactiva, cómo dotar a nuestra aplicación de reactividad a las acciones que realice el usuario, la introduccion dinámica de datos y parámetros mediante botones, selectores, barras slide o clicks en *htmlwidgets*... así como a personalizar la apariencia y formato de la web final.
+
+**Después del taller tendrás las herramientas y la base para crear aplicaciones web con R y presentar tus informes, trabajos, modelos o análisis de una forma atractiva, dinámica y con funcionalidad en tiempo real**. Un mundo de posibilidades para mostrar tus ideas y creacciones. 
+
+## MATERIAL Y RECURSOS
+Se requiere un conocimiento básico de R y del entorno RSTUDIO. 
+Por favor, trae tu propio portátil con R y RSTUDIO así como las siguientes librerías instaladas si quieres realizar los ejercicios activamente durante el taller:
+
+-	flexdashboard
+- Shiny
+- crosstalk
+-	leaflet
+- plotly
+-	DT
+- ggplot2
+- prophet
+- ... 
+
+## CÓDIGO DE CONDUCTA
+Esperamos que todos los asistentes cumplan con nuestro código de conducta UMUR.
+Este grupo fue creado para que quienes se identifican como usuarios de R tengan un lugar  para aprender y disfrutar.
