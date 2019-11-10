@@ -1,9 +1,9 @@
 ---
 title: "Shiny fácil con flexdashboard"
 subtitle: "Cómo crear app web dinámicas con R "
-author: " "
+author: "Fernando Villalba Bergado "
 date: " `r Sys.Date()`"
-institute: " `r icon::fa_rocket(animate = 'spin')` Fernando Villalba Bergado"
+institute: " `r icon::fa_rocket(animate = 'spin')`   "
 output:
     xaringan::moon_reader:
      transition: slide
@@ -21,7 +21,7 @@ editor_options:
 ---
 
 layout: true
-background-image: url(imag/logoR.png)
+background-image: url(imag/Logo_enrdados_blanco.png)
 background-position: 98% 1% 
 background-size: 5%
 
@@ -54,11 +54,11 @@ class: animated, fadeInRight
  
 - Iteractividad I 
 
-- htmlWidgets
+- Iteractividad II (htmlWidgets)
 
 - **Práctica 2**: Crear tablero dinámico 
 
-- Iteractividad II (*Shiny* - servidores)
+- Iteractividad III (*Shiny* - servidores)
 
 - **Práctica 3**: Crear app dinámica 
 
@@ -68,7 +68,7 @@ class: animated, fadeInRight
 
 
 ```{r echo=FALSE, out.width = "600px", out.height="200px",fig.align='center'}
-knitr::include_graphics("imag/mentoring.jpg")
+knitr::include_graphics("imag/Logo_enrdados_blanco.png")
 ```
 
 ---

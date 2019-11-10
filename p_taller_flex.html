@@ -3,7 +3,8 @@
   <head>
     <title>Shiny fácil con flexdashboard</title>
     <meta charset="utf-8" />
-    <meta name="date" content="2019-11-04" />
+    <meta name="author" content="Fernando Villalba Bergado" />
+    <meta name="date" content="2019-11-10" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
     <link href="libs/font-awesome/css/fontawesome-all.min.css" rel="stylesheet" />
@@ -15,14 +16,15 @@ class: center, middle, inverse, title-slide
 
 # Shiny fácil con flexdashboard
 ## Cómo crear app web dinámicas con R
-### <i class="fas  fa-rocket fa-spin "></i> Fernando Villalba Bergado
-### 2019-11-04
+### Fernando Villalba Bergado
+### <i class="fas  fa-rocket fa-spin "></i>
+### 2019-11-10
 
 ---
 
 
 layout: true
-background-image: url(imag/logoR.png)
+background-image: url(imag/Logo_enrdados_blanco.png)
 background-position: 98% 1% 
 background-size: 5%
 
@@ -36,15 +38,17 @@ class: animated, fadeInRight
 
 - <i class="fas  fa-arrow-alt-circle-right "></i> ¿qué es `flexdashboard`?
 
-- <i class="fas  fa-arrow-alt-circle-right "></i> Diseño de tableros 
+- <i class="fas  fa-arrow-alt-circle-right "></i> Diseño de paneles (tableros)
  
 - **Práctica 1**: Crear tablero estático
  
-- Iteractividad I
+- Iteractividad I 
+
+- Iteractividad II (htmlWidgets)
 
 - **Práctica 2**: Crear tablero dinámico 
 
-- Iteractividad II (*Shiny* - servidores)
+- Iteractividad III (*Shiny* - servidores)
 
 - **Práctica 3**: Crear app dinámica 
 
@@ -53,14 +57,7 @@ class: animated, fadeInRight
 - **Práctica 4**: Crear app completa y publicarla en Internet 
 
 
-1. que son los tableros
-2. Diseño de tableros 
-3. Insertar componentes
-4. Interactividad
-5. flexdashboard vs. shinydashboard
-
-
-&lt;img src="imag/mentoring.jpg" width="600px" height="200px" style="display: block; margin: auto;" /&gt;
+&lt;img src="imag/Logo_enrdados_blanco.png" width="600px" height="200px" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -70,6 +67,33 @@ class: animated, fadeInRight
 El manual básico está en &lt;https://rmarkdown.rstudio.com/flexdashboard/&gt;
 
 Estos tableros pueden ser estáticos o dinámicos según la forma de interacción con el cliente -servidor de datos.
+
+---
+
+# ¿qué es un tablero?
+
+Estos son algunos ejemplos de tableros
+
+![dashboard-cartoon](dashboard-cartoon.jpg)
+![social-media](socialmedia-dashboard.png)
+
+---
+
+# Ejemplos de tableros
+
+![marketing](marketing-dashboard.png)
+
+&lt;iframe src="wastelands.html" width="800" height="600"&gt;
+&lt;/iframe&gt;
+
+---
+# ¿por qué usar R para esto?
+
+- Elimina pasos en la informacion, ya que el analista puede crear directamente y presentar los resultados como si fuese 
+- Facilita análisis presentación y comunicación
+- Eliminar al intermediario; capacitar a los analistas para producir paneles de nivel ejecutivo
+- Personalización prácticamente infinita
+
 
 ---
 
@@ -287,6 +311,19 @@ background-size: cover
 Después de crear la app con shiny se puede alojar en &lt;ShinyApps.io&gt; es la opción más sencilla. La cuenta gratuita da derecho a 5 app en el servidor.
 
 Otras opciones son RSTUDIO connect, o crearse un servidor Shiny propio en el que publicar, pr ejemplo en mi blog teneis cómo hacerlo en AWS
+
+### webs estáticas o con crosstalk
+
+- mandar html
+- RPubs
+- Servidor propio
+
+### webs Shiny
+- shinyapp.io
+- AWS
+- RSTUDIOcloud
+- Serividor propio
+
 
 ---
 class: inverse, center, middle,animated, jackInTheBox
