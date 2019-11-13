@@ -1,0 +1,53 @@
+---
+title: "gpt2"
+output:
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+    logo: "imag/logoR.png"
+    social: menu
+    source_code: embed
+    theme: united
+runtime: shiny
+---
+```{r}
+install.packages("sys")
+install.packages("mime")
+install.packages("openssl")
+#install.packages("curl")
+install.packages("https://github.com/jeroen/curl/archive/master.tar.gz", repos = NULL)
+install.packages("httr")
+install.packages("zip")
+remotes::install_github("rstudio/pins")
+#
+# segunda fase
+install.packages("processx")
+install.packages("purrr")
+install.packages("Rcpp")
+install.packages("rlang")
+install.packages("whisker")
+remotes::install_github("r-tensorflow/gpt2")
+# 3 fase
+gpt2::install_gpt2(method = "conda", envname = "r-gpt2")
+
+# no funcion pues hay que instalar anaconda antes para windows 
+# https://www.anaconda.com/download/#windows
+# 4 uso
+
+gpt2::gpt2("Hello my name is")
+```
+
+
+# Instrucciones
+
+### Instrucciones del modelo
+
+# Genera texto
+
+## input
+
+### Introduce texto de partida
+
+## output
+
+### modelogpt2

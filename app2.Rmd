@@ -4,96 +4,71 @@ output:
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
+    self_contained: true
+runtime: shiny    
 ---
 
 ```{r setup, include=FALSE}
+# este ejemplo crea una app para pronostico de valores
+# cargo las librerías
+# https://www.youtube.com/watch?v=rV-hhKBRKbI&t=0s
 library(flexdashboard)
 library(prophet)
-#library(lubridate)
-#library(ggplot2)
+library(lubridate)
+library(ggplot2)
+library(quantmod)
+library(BatchGetSymbols)
 
-#data<-read.csv(file.choose(), header = T)
-data<-read.csv2("poblacionCARM.csv", header = T)
-colnames(data)
-colnames(data)[12]<-'PROVMUN'
+library(DT)
+# descarga lso datos de las siguienets empresas
+#dat_bolsa <- getSymbols(c("MSFT", "HPQ", "INTC"), from = "2014-01-01",  auto.assign=TRUE)
 
-library(sf)
-capa_shp<-st_read('capas/pob_Murcia.shp')
-st_crs(capa_shp)<-25830
-capa_shp<-st_transform(capa_shp,crs=4326)
-capa_shp<-merge(x=capa_shp,y=data,by="PROVMUN")
+mis.valores <- c('MSFT','GOOGL','JPM','GE')
+
+fecha.ini <- Sys.Date()-365
+fecha.fin <- Sys.Date()
+    
+datosvalores<- BatchGetSymbols(tickers = mis.valores,
+                             first.date = fecha.ini,
+                             last.date = fecha.fin )
+#str(dat_bolsa)
+#dat_bolsa
+#head(dat_bolsa$MSFT)
+#class(dat_bolsa)
+
+datos<-datosvalores$df.tickers
+str(datosvalores)
 ```
+
+
+## lateral {.sidebar }
 
 ```{r}
-#library(leaflet)
-#str(capa_shp)
-# paleta de color:
-#pal <- colorFactor(palette = c("yellow","red", "blue"), 
-#                   levels = levels(capa_shp$X2018))
-#pal <- colorNumeric(c("red", "green", "blue"), 1:10)
-# Create a continuous palette function
-#pal <- colorFactor(
-#  palette = "Blues",
-#  domain = capa_shp$X2018)
 
-#m<-leaflet() %>% 
-#        addTiles() %>% 
-#        addPolygons(data = capa_shp,stroke = TRUE, fillOpacity = 0.8, color=~pal(X2018),
-#                highlight = highlightOptions(weight = 3,
-#                                              color = "red",
-#                                              bringToFront = TRUE))
-#    m
+selectInput('valor', 'Selecciona un valor', unique(datosvalores$df.control$ticker) ,multiple=F)
 
 ```
-
-
 
 # Datos
 
-## Column 
-
-### Grafico 1
+### tabla de datos
 
 ```{r}
-library(crosstalk)
-library(leaflet)
-library(DT)
+# pinta la tabla
 
+DT::renderDataTable({
+  data <- datos[datos$ticker==input$valor,  ]
+  DT::datatable(data, options = list(
+    bPaginate = TRUE
+  ))
+})
 
-# Compartimos los datos
-sd <- SharedData$new(capa_shp[,1:10])
-
-# Create a filter input
-filter_slider("X2013", "poblacion13", sd, column=~X2013, step=1000, width=250)
-
-# Use SharedData like a dataframe with Crosstalk-enabled widgets
-bscols(
-  leaflet(sd) %>% addTiles() %>% addPolygons(stroke = TRUE, fillOpacity = 0.8),
-  datatable(sd, extensions="Scroller", style="bootstrap", class="compact", width="100%",
-    options=list(deferRender=TRUE, scrollY=300, scroller=TRUE))
-)
 ```
 
-# fer
+# Grafico
 
-## Column {data-width=650}
-
-### Chart a
+## Graficos de pronostico
 
 ```{r}
 
 ```
-## Column {data-width=350}
-
-### Chart B
-
-```{r}
-
-```
-
-### Chart C
-
-```{r}
-
-```
-
