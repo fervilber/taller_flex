@@ -4,7 +4,7 @@
     <title>Shiny fácil con flexdashboard</title>
     <meta charset="utf-8" />
     <meta name="author" content="Fernando Villalba Bergado" />
-    <meta name="date" content="2019-11-10" />
+    <meta name="date" content="2019-11-21" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
     <link href="libs/font-awesome/css/fontawesome-all.min.css" rel="stylesheet" />
@@ -18,7 +18,7 @@ class: center, middle, inverse, title-slide
 ## Cómo crear app web dinámicas con R
 ### Fernando Villalba Bergado
 ### <i class="fas  fa-rocket fa-spin "></i>
-### 2019-11-10
+### 2019-11-21
 
 ---
 
@@ -26,7 +26,7 @@ class: center, middle, inverse, title-slide
 layout: true
 background-image: url(imag/Logo_enrdados_blanco.png)
 background-position: 98% 1% 
-background-size: 5%
+background-size: 6%
 
 
 
@@ -34,75 +34,101 @@ background-size: 5%
 ---
 class: animated, fadeInRight
 
-# ¿que vamos a ver?
+# Índice resumen
 
-- <i class="fas  fa-arrow-alt-circle-right "></i> ¿qué es `flexdashboard`?
+- ¿qué es `flexdashboard`?
 
-- <i class="fas  fa-arrow-alt-circle-right "></i> Diseño de paneles (tableros)
+- Diseño de paneles <i class="fas  fa-arrow-alt-circle-right "></i> **Práctica**
  
-- **Práctica 1**: Crear tablero estático
- 
-- Iteractividad I 
+- Iteractividad I  <i class="fas  fa-arrow-alt-circle-right "></i> **Práctica**
 
-- Iteractividad II (htmlWidgets)
+- Iteractividad II (htmlWidgets) <i class="fas  fa-arrow-alt-circle-right "></i> **Práctica** 
 
-- **Práctica 2**: Crear tablero dinámico 
+- Iteractividad III (*Shiny* ) <i class="fas  fa-arrow-alt-circle-right "></i> **Práctica **
 
-- Iteractividad III (*Shiny* - servidores)
-
-- **Práctica 3**: Crear app dinámica 
-
-- Diseño avanzado y publicación
-
-- **Práctica 4**: Crear app completa y publicarla en Internet 
+- Diseño avanzado y publicación <i class="fas  fa-arrow-alt-circle-right "></i> **Práctica**
 
 
-&lt;img src="imag/Logo_enrdados_blanco.png" width="600px" height="200px" style="display: block; margin: auto;" /&gt;
+![](imag/firststep.jpg)
 
 ---
 
-#¿qué es `flexdashboard`?
+#¿qué es *flexdashboard*?
 
-*flexdashboard* es una extensión de *RMarkdown* que ha desarrollado RSTUDIO para facilitar la generación de aplicaciones o informes web, denominados genéricamente tableros.
-El manual básico está en &lt;https://rmarkdown.rstudio.com/flexdashboard/&gt;
+[flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) es una extensión de *Rmarkdown* desarrollada por RSTUDIO para facilitar la creación de paneles web (también se llaman tableros o simplemente applicaciones web).
+
+&lt;https://rmarkdown.rstudio.com/flexdashboard/&gt;
 
 Estos tableros pueden ser estáticos o dinámicos según la forma de interacción con el cliente -servidor de datos.
+
+![dashboard-cartoon](flexdashboard-talk-master/dashboard-cartoon.jpg)
 
 ---
 
 # ¿qué es un tablero?
 
-Estos son algunos ejemplos de tableros
+Estos son algunos ejemplos de tableros (estáticos, de visualización de datos)
 
-![dashboard-cartoon](dashboard-cartoon.jpg)
-![social-media](socialmedia-dashboard.png)
+![tablero control web](imag/dashboard.jpg)
+---
+# Ejemplo bolsa
+
+![marketing](imag/bloomberg.jpg)
 
 ---
 
 # Ejemplos de tableros
 
-![marketing](marketing-dashboard.png)
+![marketing](imag/tablero2.jpg)
+---
+# Ejemplo real -estático-
 
-&lt;iframe src="wastelands.html" width="800" height="600"&gt;
+&lt;iframe src="flexdashboard-talk-master/wastelands.html" width="800" height="600"&gt;
 &lt;/iframe&gt;
 
 ---
-# ¿por qué usar R para esto?
+# Ejemplo real - shiny -
 
-- Elimina pasos en la informacion, ya que el analista puede crear directamente y presentar los resultados como si fuese 
-- Facilita análisis presentación y comunicación
-- Eliminar al intermediario; capacitar a los analistas para producir paneles de nivel ejecutivo
-- Personalización prácticamente infinita
-
+&lt;iframe src="https://walkerke.shinyapps.io/neighborhood_diversity/" width="800" height="600"&gt;
+&lt;/iframe&gt;
 
 ---
 
-# Creacción de tableros 
+class: inverse
 
-Se crean como un fichero rmarkdown *.Rmd. Una vez cargada la librería puede obtenerse desde la plantilla de RSTUDIO.
+# Crear una app 
 
-Como  todos los ficheros Rmd, cuentan con un encabezado YAML en el que se definen los parámetros generales de salida, y el resto es código rmarkdown.
+ 1. Diseño de la plantilla 
+ 2. Programación y relleno de cajas
+ 3. Subir a un servidor o enviar fichero `html`
 
+
+
+![cat](imag/ceiling-cat.jpg)
+
+---
+
+# Fichero de partida rmarkdown
+
+```YAML
+---
+title: "Row Orientation" 
+output: 
+    flexdashboard::flex_dashboard: 
+      orientation: rows
+---
+    
+## Row
+
+### Chart 1
+   
+## Row
+
+### Chart 2
+    
+### Chart 3
+
+```
 
 ---
 
@@ -130,46 +156,66 @@ class: animated, fadeInLeft
 
 # Formato 
 
-Cualquier aplicación la crearemos a partir de 3 niveles o formatos específicos 
+Cualquier tablero la crearemos a partir de 3 niveles básicos:
 
-* Niveles: 
+.pull-left[
 
-  1. Pestañas #  o  `===`
- 
-  2. Columnas o filas ##  o `---`  {.sidebar} {.tabset}
-
-  3. Cajas ###  (pueden ser filas columnas o pestañas)
-
-Dentro de una caja de nivel 3 podremos usar código rmarkdown normal y corriente o trozos de código R en formato habitual en Rmarkdown es decir entrecomillado  `\(```{r}\)` y `\(```\)`.
-
----
-
-# Ejemplos de diseños de app
-
-Inserter ejemplos de diferentes diseños de aplicaciones
-
-```yaml
----
-title: "Row Orientation"
-output: 
-  flexdashboard::flex_dashboard:
-    orientation: rows
----
-    
-## Row
-
-### Chart 1
-    
-
-   
-## Row
-
-### Chart 2
-
-    
-### Chart 3
-
+1. **Páginas** 
 ```
+#        `===`
+```
+2. **Columnas - filas**
+```
+##       `---` 
+```
+3. **Cajas** 
+```
+### 
+```
+4. Extras:
+   + {.sidebar} (niveles 2 y 3)
+   + {.tabset} (niveles 2 y 3)
+   + {data-width=350} 
+   + {data-height=}
+]
+
+.pull-right[
+
+![cat](imag/flexdashboard-pages.png)
+
+]
+---
+
+
+# Complementos
+
+## Value boxes
+
+
+```r
+library(flexdashboard)
+articles &lt;- 204
+valueBox(articles, 
+         icon = "fa-pencil", 
+         caption = "Articles per Day")
+```
+
+
+![valuebox](flexdashboard-talk-master/valuebox.png)
+---
+
+# gauge
+
+
+```r
+satisfaction &lt;- 86
+gauge(satisfaction, min = 0, max = 100, symbol = '%', 
+  label = "Satisfaction", gaugeSectors(
+  success = c(80, 100), warning = c(40, 79), danger = c(0, 39)
+))
+```
+
+![gauge](imag/gauge.png)
 
 
 ---
@@ -178,7 +224,7 @@ class: inverse, center, middle
 
 # Interactividad simple
 
-&lt;img src="imag/puertas.jpg" width="600px" height="400px" style="display: block; margin: auto;" /&gt;
+&lt;img src="imag/tablero2.jpg" width="600px" height="400px" style="display: block; margin: auto;" /&gt;
 
 --
 
@@ -324,6 +370,8 @@ Otras opciones son RSTUDIO connect, o crearse un servidor Shiny propio en el que
 - RSTUDIOcloud
 - Serividor propio
 
+
+&lt;img src="imag/firststep.jpg" width="600px" height="150px" style="display: block; margin: auto;" /&gt;
 
 ---
 class: inverse, center, middle,animated, jackInTheBox

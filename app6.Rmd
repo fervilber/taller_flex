@@ -1,0 +1,220 @@
+---
+title: "flexdashboard + shiny"
+output:
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    logo: "imag/logoR.png"
+    social: menu
+    source_code: embed
+    theme: united
+runtime: shiny
+---
+
+<script>
+$('.navbar-logo').wrap('<a href="http://www.enrdados.net" target=_blank>');
+</script>
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+#    favicon: " `r icon::fa_rocket()`"
+#    output_dir: "docs"
+
+```
+
+# holamundo {data-icon="fa-calendar"} 
+
+## {.sidebar}
+
+Esto es el sidebar
+
+* [Bolsa](#Bolsa)
+* [Graficas](#g1)
+
+```{r echo=FALSE}
+fileInput("file1", "Choose CSV File",
+                multiple = TRUE,
+                accept = c("text/csv",
+                         "text/comma-separated-values,text/plain",
+                         ".csv"))
+
+#inFile <- input$file1
+
+renderText({
+    if (is.null(input$file1)){
+      return(NULL)}
+    else{input$file1$name}
+       })
+#df_reac <- reactive({read_xlsx(file1$datapath)})
+
+passwordInput("clave","introduce clave")
+
+renderText({
+    if (is.null(input$clave)){
+      return(NULL)}
+    else{input$clave}
+       })
+```
+
+## componentes
+
+### fer 
+```{r}
+#plot(cars)
+library(dygraphs)
+dygraph(ldeaths)
+```
+
+> grafico con dygraphs
+
+
+### Graficos 
+
+```{r}
+
+contador<-34
+valueBox(contador,
+         icon ="fa-comments",
+         caption ="contador de visitas")
+```
+
+### otro
+
+```{r}
+spam <- 12
+valueBox(spam, 
+         icon = "fa-trash",
+         color = ifelse(spam > 10, "warning", "primary"))
+```
+
+
+# Graficas {data-icon="fa-users"} 
+
+## Column {data-width=650}
+
+
+### Scatterplot of weight and miles per gallon
+
+```{r}
+mpg_subset <- reactive({
+  mtcars %>%
+    filter(
+      hp >= input$hp[1],
+      hp <= input$hp[2],
+      cyl %in% input$cyl
+    )
+})
+renderPlot({
+  ggplot(mpg_subset(), aes(x = wt, y = mpg, color = factor(cyl))) +
+    geom_point(size=4)
+})
+```
+
+> ejemplo 3
+
+
+Column {data-width=350}  
+-----------------------------------------------------------------------
+
+### Inputs
+
+```{r}
+checkboxGroupInput("cyl", "Cylinders", choices = c("4", "6", "8"),
+                   selected = c("4", "6", "8"), inline = TRUE
+                   )
+sliderInput("hp", "Horsepower",
+            min = min(mtcars$hp), max = max(mtcars$hp),
+            value = range(mtcars$hp)
+            )
+radioButtons("plot_type", "Weight plot type", 
+             choices = c("Histogram", "Violin plot"), selected = c("Histogram"))
+
+
+
+```
+
+### Histogram of weight
+
+```{r}
+renderPlot({
+  
+  if(input$plot_type == "Histogram"){
+    ggplot(mpg_subset(), aes(x = wt)) +
+      geom_histogram(binwidth = 0.25) +
+      coord_cartesian(xlim = range(mtcars$wt)) 
+  }
+  else {
+    ggplot(mpg_subset(), aes(y = wt, x = factor(1))) +
+      geom_violin()
+  }
+    
+})
+```
+
+# Bolsa {data-icon="fa-signal"} 
+
+## {.sidebar}
+
+
+```{r}
+checkboxGroupInput("cyl", "Cylinders", choices = c("4", "6", "8"),
+                   selected = c("4", "6", "8"), inline = TRUE
+                   )
+sliderInput("hp", "Horsepower",
+            min = min(mtcars$hp), max = max(mtcars$hp),
+            value = range(mtcars$hp)
+            )
+radioButtons("plot_type", "Weight plot type", 
+             choices = c("Histogram", "Violin plot"), selected = c("Histogram"))
+
+#library(dygraphs)
+library(quantmod)
+#library(flexdashboard)
+
+getSymbols(c("MSFT", "HPQ", "INTC"), from = "2014-01-01", auto.assign=TRUE)
+```
+
+## Graficos
+
+
+### Microsoft
+
+```{r}
+dygraph(MSFT[,2:4], group = "stocks") %>% 
+  dySeries(c("MSFT.Low", "MSFT.Close", "MSFT.High"), label = "MSFT")
+
+```
+
+### HPQ
+
+```{r}
+dygraph(HPQ[,2:4], group = "stocks") %>% 
+  dySeries(c("HPQ.Low", "HPQ.Close", "HPQ.High"), label = "HPQ")
+```
+
+
+# crosstalk
+
+## mapa
+
+```{r}
+library(crosstalk)
+library(leaflet)
+library(DT)
+
+
+# Wrap data frame in SharedData
+sd <- SharedData$new(quakes[sample(nrow(quakes), 100),])
+
+# Create a filter input
+filter_slider("mag", "Magnitude", sd, column=~mag, step=0.1, width=250)
+
+# Use SharedData like a dataframe with Crosstalk-enabled widgets
+bscols(
+  leaflet(sd) %>% addTiles() %>% addMarkers(),
+  datatable(sd, extensions="Scroller", style="bootstrap", class="compact", width="100%",
+    options=list(deferRender=TRUE, scrollY=300, scroller=TRUE))
+)
+```
+

@@ -4,41 +4,90 @@ output:
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
+    self_contained: true
+runtime: shiny    
 ---
 
 ```{r setup, include=FALSE}
+# este ejemplo crea una app para pronostico de valores
+# cargo las librerías
+# https://www.youtube.com/watch?v=rV-hhKBRKbI&t=0s
 library(flexdashboard)
 library(prophet)
-library(lubridate)
+#library(lubridate)
 library(ggplot2)
-data<-read.csv(file.choose(), header = T)
+
+library(DT)
+
+dat_bolsa<-read.csv("datosbolsa.csv")
+#head(dat_bolsa)
+dat_bolsa$ref.date<-as.Date(dat_bolsa$ref.date)
+#read.csv(file.choose(),header=T)
+# nos quedamos con solo cierre
+pq_dat<-dat_bolsa[,c("price.close","ref.date","ticker")]
+# cambiamos los nombres
+names(pq_dat)<-c("close","date","ticker")
+
+```
+
+```{r eval=FALSE}
+library(quantmod)
+library(BatchGetSymbols)
+
+# descarga lso datos de las siguienets empresas
+#dat_bolsa <- getSymbols(c("MSFT", "HPQ", "INTC"), from = "2014-01-01",  auto.assign=TRUE)
+# solo para guardar el fichero la primera vez
+  mis.valores <- c('MSFT','GOOGL','JPM','GE')
+  fecha.ini <- Sys.Date()-365
+  fecha.fin <- Sys.Date()
+      
+  datosvalores<- BatchGetSymbols(tickers = mis.valores,
+                               first.date = fecha.ini,
+                               last.date = fecha.fin )
+  # se forma una lista
+  # nos quedamos solo con los valores
+  datos<-datosvalores$df.tickers
+  #str(datosvalores)
+  
+  write.csv(datos,"datosbolsa.csv", row.names = FALSE)
 ```
 
 
-Datos
-===========================
-
-Column {data-width=650}
---------------------------
-
-### Grafico 1
+## lateral {.sidebar }
 
 ```{r}
-plot(1:10)
+
+#selectInput('valor', 'Selecciona un valor', unique(datosvalores$df.control$ticker) ,multiple=F)
+selectInput('valor', 'Selecciona un valor', unique(pq_dat$ticker) ,multiple=F)
+
 ```
 
-Column {data-width=350}
------------------------------------------------------------------------
+# Datos
 
-### Chart B
+### tabla de datos
 
 ```{r}
+# pinta la tabla
+
+DT::renderDataTable({
+  data <- datos[datos$ticker==input$valor,  ]
+  DT::datatable(data, options = list(
+    bPaginate = TRUE
+  ))
+})
 
 ```
 
-### Chart C
+# Grafico
+
+## Graficos de pronostico
 
 ```{r}
+#qplot(date,close,data=pq_dat[pq_dat$ticker==input$valor,],
+#      main="grafico 1")
+idval<-input$valor
 
+ggplot(data=pq_dat[pq_dat$ticker==idval(),],aes(date,close))
+  +geom_line()
+  
 ```
-

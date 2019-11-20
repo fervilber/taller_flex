@@ -1,0 +1,99 @@
+---
+title: "app2"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+
+#library(lubridate)
+#library(ggplot2)
+
+#data<-read.csv(file.choose(), header = T)
+data<-read.csv2("poblacionCARM.csv", header = T)
+colnames(data)
+colnames(data)[12]<-'PROVMUN'
+
+library(sf)
+capa_shp<-st_read('capas/pob_Murcia.shp')
+st_crs(capa_shp)<-25830
+capa_shp<-st_transform(capa_shp,crs=4326)
+capa_shp<-merge(x=capa_shp,y=data,by="PROVMUN")
+```
+
+```{r}
+#library(leaflet)
+#str(capa_shp)
+# paleta de color:
+#pal <- colorFactor(palette = c("yellow","red", "blue"), 
+#                   levels = levels(capa_shp$X2018))
+#pal <- colorNumeric(c("red", "green", "blue"), 1:10)
+# Create a continuous palette function
+#pal <- colorFactor(
+#  palette = "Blues",
+#  domain = capa_shp$X2018)
+
+#m<-leaflet() %>% 
+#        addTiles() %>% 
+#        addPolygons(data = capa_shp,stroke = TRUE, fillOpacity = 0.8, color=~pal(X2018),
+#                highlight = highlightOptions(weight = 3,
+#                                              color = "red",
+#                                              bringToFront = TRUE))
+#    m
+
+```
+
+
+
+# Datos
+
+## Column 
+
+### Grafico 1
+
+```{r}
+library(crosstalk)
+library(leaflet)
+library(DT)
+
+
+# Compartimos los datos
+sd <- SharedData$new(capa_shp[,1:10])
+
+# Create a filter input
+filter_slider("X2013", "poblacion13", sd, column=~X2013, step=1000, width=250)
+
+# Use SharedData like a dataframe with Crosstalk-enabled widgets
+bscols(
+  leaflet(sd) %>% addTiles() %>% addPolygons(stroke = TRUE, fillOpacity = 0.8),
+  datatable(sd, extensions="Scroller", style="bootstrap", class="compact", width="100%",
+    options=list(deferRender=TRUE, scrollY=300, scroller=TRUE))
+)
+```
+
+# fer
+
+## Column {data-width=650}
+
+### Chart a
+
+```{r}
+
+```
+## Column {data-width=350}
+
+### Chart B
+
+```{r}
+
+```
+
+### Chart C
+
+```{r}
+
+```
+
