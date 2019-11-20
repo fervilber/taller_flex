@@ -14,30 +14,42 @@ runtime: shiny
 # https://www.youtube.com/watch?v=rV-hhKBRKbI&t=0s
 library(flexdashboard)
 library(prophet)
-library(lubridate)
+#library(lubridate)
 library(ggplot2)
+
+library(DT)
+
+dat_bolsa<-read.csv("datosbolsa.csv")
+#head(dat_bolsa)
+dat_bolsa$ref.date<-as.Date(dat_bolsa$ref.date)
+#read.csv(file.choose(),header=T)
+# nos quedamos con solo cierre
+pq_dat<-dat_bolsa[,c("price.close","ref.date","ticker")]
+# cambiamos los nombres
+names(pq_dat)<-c("close","date","ticker")
+
+```
+
+```{r eval=FALSE}
 library(quantmod)
 library(BatchGetSymbols)
 
-library(DT)
 # descarga lso datos de las siguienets empresas
 #dat_bolsa <- getSymbols(c("MSFT", "HPQ", "INTC"), from = "2014-01-01",  auto.assign=TRUE)
-
-mis.valores <- c('MSFT','GOOGL','JPM','GE')
-
-fecha.ini <- Sys.Date()-365
-fecha.fin <- Sys.Date()
-    
-datosvalores<- BatchGetSymbols(tickers = mis.valores,
-                             first.date = fecha.ini,
-                             last.date = fecha.fin )
-#str(dat_bolsa)
-#dat_bolsa
-#head(dat_bolsa$MSFT)
-#class(dat_bolsa)
-
-datos<-datosvalores$df.tickers
-str(datosvalores)
+# solo para guardar el fichero la primera vez
+  mis.valores <- c('MSFT','GOOGL','JPM','GE')
+  fecha.ini <- Sys.Date()-365
+  fecha.fin <- Sys.Date()
+      
+  datosvalores<- BatchGetSymbols(tickers = mis.valores,
+                               first.date = fecha.ini,
+                               last.date = fecha.fin )
+  # se forma una lista
+  # nos quedamos solo con los valores
+  datos<-datosvalores$df.tickers
+  #str(datosvalores)
+  
+  write.csv(datos,"datosbolsa.csv", row.names = FALSE)
 ```
 
 
@@ -45,7 +57,8 @@ str(datosvalores)
 
 ```{r}
 
-selectInput('valor', 'Selecciona un valor', unique(datosvalores$df.control$ticker) ,multiple=F)
+#selectInput('valor', 'Selecciona un valor', unique(datosvalores$df.control$ticker) ,multiple=F)
+selectInput('valor', 'Selecciona un valor', unique(pq_dat$ticker) ,multiple=F)
 
 ```
 
@@ -70,5 +83,11 @@ DT::renderDataTable({
 ## Graficos de pronostico
 
 ```{r}
+#qplot(date,close,data=pq_dat[pq_dat$ticker==input$valor,],
+#      main="grafico 1")
+idval<-input$valor
 
+ggplot(data=pq_dat[pq_dat$ticker==idval(),],aes(date,close))
+  +geom_line()
+  
 ```
