@@ -1,93 +1,140 @@
 ---
-title: "app2"
-output: 
+title: "Nilo"
+author: "FVB"
+date: "2019"
+output:
   flexdashboard::flex_dashboard:
+    navbar:
+      - { title: "enRdados", href: "http://www.enrdados.net", align: right }
     orientation: columns
     vertical_layout: fill
-    self_contained: true
-runtime: shiny    
 ---
 
 ```{r setup, include=FALSE}
-# este ejemplo crea una app para pronostico de valores
-# cargo las librerías
-# https://www.youtube.com/watch?v=rV-hhKBRKbI&t=0s
 library(flexdashboard)
-library(prophet)
-#library(lubridate)
+library(dygraphs)
 library(ggplot2)
-
-library(DT)
-
-dat_bolsa<-read.csv("datosbolsa.csv")
-#head(dat_bolsa)
-dat_bolsa$ref.date<-as.Date(dat_bolsa$ref.date)
-#read.csv(file.choose(),header=T)
-# nos quedamos con solo cierre
-pq_dat<-dat_bolsa[,c("price.close","ref.date","ticker")]
-# cambiamos los nombres
-names(pq_dat)<-c("close","date","ticker")
-
+library(plotly)
 ```
 
-```{r eval=FALSE}
-library(quantmod)
-library(BatchGetSymbols)
+# Gráficas
 
-# descarga lso datos de las siguienets empresas
-#dat_bolsa <- getSymbols(c("MSFT", "HPQ", "INTC"), from = "2014-01-01",  auto.assign=TRUE)
-# solo para guardar el fichero la primera vez
-  mis.valores <- c('MSFT','GOOGL','JPM','GE')
-  fecha.ini <- Sys.Date()-365
-  fecha.fin <- Sys.Date()
-      
-  datosvalores<- BatchGetSymbols(tickers = mis.valores,
-                               first.date = fecha.ini,
-                               last.date = fecha.fin )
-  # se forma una lista
-  # nos quedamos solo con los valores
-  datos<-datosvalores$df.tickers
-  #str(datosvalores)
-  
-  write.csv(datos,"datosbolsa.csv", row.names = FALSE)
+## columna 1
+
+### Caudales máximos anuales
+
+```{r}
+#cambiamos plot por dygraph
+dygraph(Nile) %>% dyOptions(stackedGraph = TRUE) %>% dyRangeSelector()
 ```
 
+> grafica de caudales maximos anuales en el río Nilo
 
-## lateral {.sidebar }
+## columna 2
+
+### Gráfica estadística
 
 ```{r}
 
-#selectInput('valor', 'Selecciona un valor', unique(datosvalores$df.control$ticker) ,multiple=F)
-selectInput('valor', 'Selecciona un valor', unique(pq_dat$ticker) ,multiple=F)
+dtnilo<-data.frame(caudal=as.matrix(Nile), ano=time(Nile))
+
+p<-ggplot(dtnilo, aes(caudal)) +
+      labs(title='Histograma de caudales maximos')+
+      #labs(x = 'Año', y = expression('Caudal en m'^3))+
+      labs(x = 'Año', y = 'Caudal en m3/s')+
+    geom_histogram(fill="blue", color="black",bins=10)+
+    geom_rug()
+
+ggplotly(p)
+```
+
+> grafica de frecuencias de caudales en el río Nilo
+
+### Historia del Nilo
+
+El Nilo (النيل en árabe) es el mayor río de África, que fluye en dirección norte a través de diez países —Burundi, Ruanda, Tanzania, Uganda, Kenia, República Democrática del Congo, Sudán del Sur, Sudán, Egipto y Etiopía— hasta desaguar en el extremo sureste del mar Mediterráneo, formando el gran delta del Nilo, sobre el que están situadas las ciudades de El Cairo y Alejandría. Tiene una longitud de 6853 km, el segundo río más largo del mundo, tras el Amazonas.
+
+Durante siglos fue considerado el río más largo del mundo, sin embargo, mediciones de los años 2007 y 2008 han redefinido el nacimiento del Amazonas en la cuenca del río Apurimac al sur del Perú, designándolo como el río más largo del mundo.
+
+La fuente más lejana del lago Victoria es el río Kagera, localizado al oeste de Tanzania. Si se considera este como fuente del Nilo, su nacimiento sería el curso de agua más largo de los que desembocan en el Mediterráneo, siendo el Nilo-Kagera el segundo río más largo del mundo, con una longitud de 6853 kilómetros. Ver los datos anuales aquí: [Datos]
+
+```{r eval=FALSE, echo=FALSE}
+
+ggplot(data = dtnilo, mapping = aes(x = ano, y = caudal)) + 
+        geom_boxplot(fill='red',horizontal=TRUE)+
+        coord_flip()+
+        geom_rug()
 
 ```
 
 # Datos
 
-### tabla de datos
+## Resumen Datos {data-width=250}
+
+### Máximo caudal
 
 ```{r}
-# pinta la tabla
+#maxC<-max(Nile)
+valueBox(max(Nile), icon = "fa-stream")
 
-DT::renderDataTable({
-  data <- datos[datos$ticker==input$valor,  ]
-  DT::datatable(data, options = list(
-    bPaginate = TRUE
+```
+
+### Minimo caudal
+```{r}
+valueBox(min(Nile), icon = "fa-tint")
+```
+
+### Media
+```{r}
+resumen<-summary(Nile)
+
+gauge(as.numeric(resumen[4]),
+      min = 0, max = 2000,
+      symbol = 'm',
+      gaugeSectors( success = c(0, 500),
+                    warning = c(501, 1000),
+                    danger = c(1001, 2000)
+))
+```
+
+### Min
+```{r}
+
+gauge(as.numeric(resumen[1]),
+      min = 0, max = 2000,
+      symbol = 'm',
+      gaugeSectors(success = c(0, 500),
+                   warning = c(501, 1000),
+                   danger = c(1001, 2000)
+))
+```
+
+### Max
+
+```{r}
+
+gauge(as.numeric(resumen[5]),
+      min = 0, max = 2000,
+      symbol = 'm',
+      gaugeSectors(success = c(0, 500),
+                   warning = c(501, 1000),
+                   danger = c(1001, 2000)
+))
+```
+
+## columna 1
+
+### Tabla de datos
+
+Estos son los datos de caudal del río Nilo
+
+```{r}
+  serieN<-data.frame(caudal=as.matrix(Nile), fecha=time(Nile))
+#¢ usamos DT
+  DT::datatable(serieN, options = list(
+    bPaginate = TRUE,
+    pageLength = 25
   ))
-})
 
 ```
 
-# Grafico
-
-## Graficos de pronostico
-
-```{r}
-#qplot(date,close,data=pq_dat[pq_dat$ticker==input$valor,],
-#      main="grafico 1")
-idval<-input$valor
-
-ggplot(data=pq_dat[pq_dat$ticker==idval(),],aes(date,close))
-  +geom_line()
-  
-```

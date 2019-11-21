@@ -196,7 +196,7 @@ Cualquier tablero la crearemos a partir de 3 niveles básicos:
 
 .pull-right[
 
-![cat](imag/flexdashboard-pages.png)
+![cat](imag/nivelesflex.gif)
 
 ]
 ---
@@ -216,6 +216,14 @@ valueBox(articles,
 
 
 ![valuebox](flexdashboard-talk-master/valuebox.png)
+
+Los iconos los puedes buscar aqui:
+
+ - [Font Awesome](https://fortawesome.github.io/Font-Awesome/icons/)
+ - [Ionicons](http://ionicons.com/)
+ - [Bootstrap Glyphicons](https://getbootstrap.com/components/#glyphicons)
+
+
 ---
 
 # gauge
@@ -233,6 +241,7 @@ gauge(satisfaction, min = 0, max = 100, symbol = '%',
 
 
 ---
+
 
 class: inverse, center, middle
 

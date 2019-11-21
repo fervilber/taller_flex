@@ -1,0 +1,113 @@
+---
+title: "Nilo"
+author: "FVB"
+date: "2019"
+output:
+  flexdashboard::flex_dashboard:
+    navbar:
+      - { title: "enRdados", href: "http://www.enrdados.net", align: right }
+    orientation: rows
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(dygraphs)
+library(ggplot2)
+library(plotly)
+```
+
+# Gráficas
+
+## fila 1
+
+### crostalk
+
+```{r}
+#https://plotly-r.com/introduction.html
+library(plotly)
+m <- highlight_key(mpg)
+p <- ggplot(m, aes(displ, hwy)) + geom_point()
+gg <- highlight(ggplotly(p), "plotly_selected")
+crosstalk::bscols(gg, DT::datatable(m))
+
+
+
+```
+
+> grafica de caudales maximos anuales en el río Nilo
+
+## fila 2
+
+
+# Datos
+
+## Resumen Datos {data-width=250}
+
+### Máximo caudal
+
+```{r}
+#maxC<-max(Nile)
+valueBox(max(Nile), icon = "fa-stream")
+
+```
+
+### Minimo caudal
+```{r}
+valueBox(min(Nile), icon = "fa-tint")
+```
+
+### Media
+```{r}
+resumen<-summary(Nile)
+
+gauge(as.numeric(resumen[4]),
+      min = 0, max = 2000,
+      symbol = 'm',
+      gaugeSectors( success = c(0, 500),
+                    warning = c(501, 1000),
+                    danger = c(1001, 2000)
+))
+```
+
+### Min
+```{r}
+
+gauge(as.numeric(resumen[1]),
+      min = 0, max = 2000,
+      symbol = 'm',
+      gaugeSectors(success = c(0, 500),
+                   warning = c(501, 1000),
+                   danger = c(1001, 2000)
+))
+```
+
+### Max
+
+```{r}
+
+gauge(as.numeric(resumen[5]),
+      min = 0, max = 2000,
+      symbol = 'm',
+      gaugeSectors(success = c(0, 500),
+                   warning = c(501, 1000),
+                   danger = c(1001, 2000)
+))
+```
+
+## columna 1
+
+### Tabla de datos
+
+Estos son los datos de caudal del río Nilo
+
+```{r}
+  serieN<-data.frame(caudal=as.matrix(Nile), fecha=time(Nile))
+#¢ usamos DT
+  DT::datatable(serieN, options = list(
+    bPaginate = TRUE,
+    pageLength = 25
+  ))
+
+```
+
