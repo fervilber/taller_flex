@@ -45,19 +45,36 @@ library("xaringan")
 #      - "animate.min.css"  
 ```
 
+---
+
+class: inverse
+
+# Empezamos
+
+.pull-left[
+
+![](imag/cartel_taller.png)
+
+]
+
+.pull-right[
+
+<iframe width="400" height="500" scrolling="yes" frameborder="no" src="https://enrdados.netlify.com/"> </iframe>
+
+]
 
 ---
 class: animated, fadeInRight
 
-# Índice resumen
+# Índice del taller
 
-- ¿qué es `flexdashboard`?
+- ¿Qué es *flexdashboard*?
 
 - Diseño de paneles `r icon::fa('arrow-alt-circle-right')` **Práctica**
  
 - Iteractividad I  `r icon::fa('arrow-alt-circle-right')` **Práctica**
 
-- Iteractividad II (htmlWidgets) `r icon::fa('arrow-alt-circle-right')` **Práctica** 
+- Iteractividad II (*htmlWidgets*) `r icon::fa('arrow-alt-circle-right')` **Práctica** 
 
 - Iteractividad III (*Shiny* ) `r icon::fa('arrow-alt-circle-right')` **Práctica **
 
@@ -68,25 +85,31 @@ class: animated, fadeInRight
 
 ---
 
+background-image: url(imag/fondo5.jpg)
+background-size: cover
+
 #¿qué es *flexdashboard*?
 
-[flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) es una extensión de *Rmarkdown* desarrollada por RSTUDIO para facilitar la creación de paneles web (también se llaman tableros o simplemente applicaciones web).
+[flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) es una extensión de *Rmarkdown* desarrollada por RSTUDIO para facilitar la creación de paneles (*applicaciones web*).
 
-<https://rmarkdown.rstudio.com/flexdashboard/>
 
-Estos tableros pueden ser estáticos o dinámicos según la forma de interacción con el cliente -servidor de datos.
+- <https://rmarkdown.rstudio.com/flexdashboard/>
 
 ![dashboard-cartoon](flexdashboard-talk-master/dashboard-cartoon.jpg)
 
+Los paneles permiten comunicar grandes cantidaes de informacion visual rápidamente. Son herramientas esenciales en la toma de decisiones empresariales
+
+existen otras librerías para hacer tableros con shiny mas completas como shinydashboard
+https://rstudio.github.io/shinydashboard/structure.html
+
 ---
 
-# ¿qué es un tablero?
+# Ejemplos
 
-Estos son algunos ejemplos de tableros (estáticos, de visualización de datos)
+![tablero de control web](imag/dashboard.jpg)
 
-![tablero control web](imag/dashboard.jpg)
 ---
-# Ejemplo bolsa
+# Panel bolsa
 
 ![marketing](imag/bloomberg.jpg)
 
@@ -95,15 +118,34 @@ Estos son algunos ejemplos de tableros (estáticos, de visualización de datos)
 # Ejemplos de tableros
 
 ![marketing](imag/tablero2.jpg)
+
 ---
-# Ejemplo real -estático-
+
+# Ejemplo reales de flexdashboard
+
+## Estáticos (lado cliente)
+
+- [informe de ventas](salesreport.html)
+- [informe de cementerios nucleares](wastelands.html)
+
+## Dinámicos (lado servidor)
+
+- [Informe de diversidad de razas en USA](https://walkerke.shinyapps.io/neighborhood_diversity/)
+
+- [contaminacion en el mundo PM2.5](air_polution.html)
+
+---
+
+# Ejemplo real - shiny -
+
+Shiny es una librería para R que permite crear aplicaciones web interactivas. Una aplicación Shiny se compone de una interfaz de usuario ui que controla el diseño y la apariencia de la aplicación, y una función server() que contiene las instrucciones para construir los objetos que se muestran en la interfaz de usuario. Las aplicaciones Shiny permiten la interacción del usuario mediante una funcionalidad llamada reactividad.
+
+```{r}
+# https://paula-moraga.github.io/book-geospatial/sec-shiny.html
+```
 
 <iframe src="flexdashboard-talk-master/wastelands.html" width="800" height="600">
 </iframe>
-
----
-# Ejemplo real - shiny -
-
 <iframe src="https://walkerke.shinyapps.io/neighborhood_diversity/" width="800" height="600">
 </iframe>
 
@@ -115,8 +157,8 @@ class: inverse
 
  1. Diseño de la plantilla 
  2. Programación y relleno de cajas
- 3. Subir a un servidor o enviar fichero `html`
-
+ 3. Reactividad
+ 3. Publicar
 
 
 ![cat](imag/ceiling-cat.jpg)
