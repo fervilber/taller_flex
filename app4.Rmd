@@ -1,0 +1,143 @@
+---
+title: "fer_app"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    self_contained: true
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(ggplot2)
+library(plotly)
+library(DT)
+library(leaflet)
+library(crosstalk)
+library(sf)
+# leemos los datos de un csv
+pob<-read.csv2('pob_murcia1.csv',stringsAsFactors = FALSE)
+#head(pob)
+# trasnformamos a numero la lat y long
+pob$long<-as.numeric(pob$long)
+pob$lat<-as.numeric(pob$lat)
+# ordenamos los datos de poblecion del 2018
+pob<-pob[order(pob$X2018),]
+pob$Municipio<- factor(pob$Municipio,levels=pob$Municipio)
+
+```
+
+# cosas
+
+## Inputs {.sidebar}
+
+```{r}
+# Rate at which to flag high download traffic
+sliderInput("maxlect", "Maximo num filas leidas:",
+            min = 10, max = 500, value = 50, step = 10
+)
+# Maximum number of raw data rows to keep
+numericInput("maxrows", "valor fijo:", 50)
+
+selectInput('variable', 'Variable', names(pob))
+
+submitButton(text = "Apply Changes", icon = icon("refresh"))
+
+dateRangeInput("daterange3", "Date range:",
+                 start  = "2001-01-01",
+                 end    = "2010-12-31",
+                 min    = "2001-01-01",
+                 max    = "2012-12-21",
+                 format = "mm/dd/yy",
+                 separator = " - ")
+
+checkboxGroupInput("variable", "Variables to show:",names(pob))
+                  
+```
+
+# Mapa
+
+## Maejor
+
+### Mapa
+
+```{r}
+renderLeaflet({
+leaflet(pob) %>% addTiles() %>% addMarkers(popup= ~paste("Habitantes de ", Municipio, X2018))
+})
+```
+
+
+### PTO LUMBRERAS
+```{r}
+ output$map <- renderLeaflet({
+  leaflet() %>%
+    addTiles() %>%
+    addMarkers(data = pob,
+               layerId = ~Municipio)
+
+})
+
+leafletOutput('map') 
+```
+
+## cosas
+
+### marcas
+
+```{r}
+
+#renderText(input$map_click)
+# se explica aquñi:
+# https://rstudio.github.io/leaflet/shiny.html
+
+
+
+click_marker <- eventReactive(input$map_marker_click, {
+
+  x <- input$map_marker_click
+#  return(x$id)
+  return(x)
+})
+
+#input$MAPID_zoom
+renderText({ 
+  print(HTML(paste(click_marker()$id),click_marker()$lat,click_marker()$lng, sep="\t"))
+  })
+```
+
+### x-y
+
+```{r}
+
+renderText({
+  
+  print(HTML(paste(input$map_click$lat),input$map_click$lng, sep="\t"))
+  
+})
+
+```
+
+### zoom
+
+```{r}
+
+renderText({
+  input$map_zoom
+  
+})
+
+```
+
+### bounds
+
+```{r}
+
+renderText({
+  
+  print(HTML(paste(input$map_bounds$north),input$map_bounds$east, sep="\t"))
+  
+})
+
+```

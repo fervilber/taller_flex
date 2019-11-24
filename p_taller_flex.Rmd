@@ -330,6 +330,7 @@ class: inverse
 
 - [https://www.htmlwidgets.org/](https://www.htmlwidgets.org/)
 - <http://gallery.htmlwidgets.org/>
+- [un ejemplo muy completo aquí](https://matt-dray.github.io/earl18-crosstalk/04_leaflet-flexdash-dt-crosstalk.html#interactives)
 
 .pull-left[
 ```{r eval=TRUE,echo=FALSE, out.height="400px"}

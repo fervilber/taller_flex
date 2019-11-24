@@ -1,119 +1,106 @@
 ---
-title: "Nilo"
+title: "Poblaciones CARM"
 author: "FVB"
 date: "2019"
 output:
   flexdashboard::flex_dashboard:
     navbar:
       - { title: "enRdados", href: "http://www.enrdados.net", align: right }
-    orientation: rows
+    orientation: columns
     vertical_layout: fill
+    theme: paper
+    source_code: embed
 ---
 
 ```{r}
+
+
 library(flexdashboard)
-library(dygraphs)
 library(ggplot2)
 library(plotly)
+library(DT)
+library(leaflet)
+library(crosstalk)
 
-# leer datos de 
-pob<-read.csv2('pob_murcia1.csv')
-head(pob)
-```
+# leemos los datos de un csv
+pob<-read.csv2('pob_murcia1.csv',stringsAsFactors = FALSE)
+#head(pob)
+# trasnformamos a numero la lat y long
+pob$long<-as.numeric(pob$long)
+pob$lat<-as.numeric(pob$lat)
+# ordenamos los datos de poblecion del 2018
+pob<-pob[order(pob$X2018),]
+pob$Municipio<- factor(pob$Municipio,levels=pob$Municipio)
 
-# Gráficas
-
-## fila 1
-
-### crostalk
-
-```{r message=FALSE, warning=TRUE}
-#https://plotly-r.com/introduction.html
-dtnilo<-data.frame(caudal=as.matrix(Nile), ano=time(Nile))
-
-library(plotly)
-m <- highlight_key(dtnilo)
-p <- ggplot(m, aes(ano, caudal)) + geom_point()
-gg <- highlight(ggplotly(p), "plotly_selected")
-crosstalk::bscols(gg, DT::datatable(m))
-
-
+# Usamos crosstalk para compartir entre htmlwidgets
+dat_compartidos<-pob[,c('Municipio','lat','long','X2018')]
+# sd=share data
+#sd <- highlight_key(dat_compartidos,~Municipio)
+sd <- SharedData$new(dat_compartidos)
 
 ```
 
-> grafica de caudales maximos anuales en el río Nilo
+# Interaccion III {data-icon="ion-stats-bars"}
 
-## fila 2
+## Col 1 {data-width=300}
 
+### mapa
 
-# Datos
+```{r }
+# creamos grafico de barras con poblacion de cada municipio
+p <-  ggplot(sd, aes(x = Municipio, y = X2018))+
+  labs(y = "Poblacion hab")+
+  geom_col(fill=rainbow(45))+
+  coord_flip() 
 
-## Resumen Datos {data-width=250}
+#Compartimos con crosstalk los datos
+# on = como seleccionamos
+# off = como salimos de la seleccion
+# ver : https://www.rdocumentation.org/packages/plotly/versions/4.9.0/topics/highlight
+gg <- highlight(ggplotly(p), on="plotly_click", off = "plotly_doubleclick")
+gg
 
-### Máximo caudal
+```
+> Grafica de municipios
+
+## col2 
+
+### Mapa
 
 ```{r}
-#maxC<-max(Nile)
-valueBox(max(Nile), icon = "fa-stream")
+#PARA MAS INFORMACION DE COMO DIBUJAR MAPAS CON LEAFLET:
+# https://enrdados.netlify.com/post/leaflet-mapas-dinamicos/
 
+ leaflet(sd) %>% addTiles() %>% addMarkers(popup= ~paste("Habitantes de ", Municipio, X2018))
 ```
+> Mapa de Murcia
 
-### Minimo caudal
-```{r}
-valueBox(min(Nile), icon = "fa-tint")
-```
-
-### Media
-```{r}
-resumen<-summary(Nile)
-
-gauge(as.numeric(resumen[4]),
-      min = 0, max = 2000,
-      symbol = 'm',
-      gaugeSectors( success = c(0, 500),
-                    warning = c(501, 1000),
-                    danger = c(1001, 2000)
-))
-```
-
-### Min
-```{r}
-
-gauge(as.numeric(resumen[1]),
-      min = 0, max = 2000,
-      symbol = 'm',
-      gaugeSectors(success = c(0, 500),
-                   warning = c(501, 1000),
-                   danger = c(1001, 2000)
-))
-```
-
-### Max
+### Gráfica población
 
 ```{r}
 
-gauge(as.numeric(resumen[5]),
-      min = 0, max = 2000,
-      symbol = 'm',
-      gaugeSectors(success = c(0, 500),
-                   warning = c(501, 1000),
-                   danger = c(1001, 2000)
-))
-```
-
-## columna 1
-
-### Tabla de datos
-
-Estos son los datos de caudal del río Nilo
-
-```{r}
-  serieN<-data.frame(caudal=as.matrix(Nile), fecha=time(Nile))
-#¢ usamos DT
-  DT::datatable(serieN, options = list(
-    bPaginate = TRUE,
-    pageLength = 25
-  ))
+DT::datatable(sd,
+              rownames = FALSE,
+              options = list(
+                  bPaginate = TRUE,
+                  pageLength = 25
+    ))
 
 ```
+
+> Tabla de poblaciones
+
+# Instrucciones {data-icon="fa-map"}
+
+## col2
+
+### Herramientas adicionales
+
+En este ejemplo de aplicación hemos usado las siguientes librerías de R:
+
+* [Flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) para crear el contenido
+* [Leaflet](https://rstudio.github.io/leaflet/) para el mapa interactivo
+* [DT](https://rstudio.github.io/DT/) para hacer la tabla interactiva
+* [Crosstalk](https://rstudio.github.io/crosstalk/) para usar unos datos comunes entre htmlwidgets
+* [Ion icons](https://ionicons.com/) y [Font Awesome](https://fontawesome.com/) para los iconos
 
