@@ -49,7 +49,7 @@ library("xaringan")
 
 class: inverse
 
-# Empezamos
+# Hola
 
 .pull-left[
 
@@ -59,11 +59,15 @@ class: inverse
 
 .pull-right[
 
-<iframe width="400" height="500" scrolling="yes" frameborder="no" src="https://enrdados.netlify.com/"> </iframe>
+![https://enrdados.netlify.com/](imag/enrdados.png)
+
+- https://enrdados.netlify.com/
+- http://www.enRdados.net
 
 ]
 
 ---
+
 class: animated, fadeInRight
 
 # Índice del taller
@@ -72,7 +76,7 @@ class: animated, fadeInRight
 
 - Diseño de paneles `r icon::fa('arrow-alt-circle-right')` **Práctica**
  
-- Iteractividad I  `r icon::fa('arrow-alt-circle-right')` **Práctica**
+- Iteractividad I  (*htmlWidgets*) `r icon::fa('arrow-alt-circle-right')` **Práctica**
 
 - Iteractividad II (*htmlWidgets*) `r icon::fa('arrow-alt-circle-right')` **Práctica** 
 
@@ -136,22 +140,34 @@ https://rstudio.github.io/shinydashboard/structure.html
 
 ---
 
-# Ejemplo real - shiny -
+# Por cierto... ¿qué es shiny?
 
-Shiny es una librería para R que permite crear aplicaciones web interactivas. Una aplicación Shiny se compone de una interfaz de usuario ui que controla el diseño y la apariencia de la aplicación, y una función server() que contiene las instrucciones para construir los objetos que se muestran en la interfaz de usuario. Las aplicaciones Shiny permiten la interacción del usuario mediante una funcionalidad llamada reactividad.
+*Shiny* es un complemento para R que permite crear aplicaciones web interactivas. Una aplicación Shiny se compone de:
 
-```{r}
+- *ui* --> una interfaz de usuario  que controla el diseño y la apariencia de la aplicación
+- *server* --> una función que contiene las instrucciones para construir los objetos que se muestran en la interfaz de usuario.
+
+Las aplicaciones *Shiny* permiten la **interacción** del usuario mediante una funcionalidad llamada *reactividad*.
+
+
+```{r echo=FALSE, out.width = "600px", out.height="150px",fig.align='center'}
+knitr::include_graphics("imag/shiny.png")
 # https://paula-moraga.github.io/book-geospatial/sec-shiny.html
 ```
 
+
+---
+
 <iframe src="flexdashboard-talk-master/wastelands.html" width="800" height="600">
 </iframe>
+
+---
+
 <iframe src="https://walkerke.shinyapps.io/neighborhood_diversity/" width="800" height="600">
 </iframe>
 
 ---
 
-class: inverse
 
 # Crear una app 
 
@@ -160,16 +176,19 @@ class: inverse
  3. Reactividad
  3. Publicar
 
-
 ![cat](imag/ceiling-cat.jpg)
 
 ---
 
 # Fichero de partida rmarkdown
 
+.pull-left[ app.Rmd
+
 ```YAML
 ---
-title: "Row Orientation" 
+title: "Memoria Anual" 
+author: "pepito"
+date: "2019"
 output: 
     flexdashboard::flex_dashboard: 
       orientation: rows
@@ -184,12 +203,18 @@ output:
 ### Chart 2
     
 ### Chart 3
-
 ```
+]
+
+.pull-right[
+
+![](imag/formatoflex.png)
+]
 
 ---
 
 # Encabezado YAML de flexdashboard
+
 
 ```YAML
 ---
@@ -202,7 +227,6 @@ output:
     social: menu
     source_code: embed
     theme: united
-   # css: bootswatch-3.3.5-4/flatly/bootstrap.css
 runtime: shiny
 ---
 
@@ -213,7 +237,7 @@ class: animated, fadeInLeft
 
 # Formato 
 
-Cualquier tablero la crearemos a partir de 3 niveles básicos:
+Cualquier tablero lo crearemos a partir de 3 niveles básicos:
 
 .pull-left[
 
@@ -230,8 +254,8 @@ Cualquier tablero la crearemos a partir de 3 niveles básicos:
 ### 
 ```
 4. Extras:
-   + {.sidebar} (niveles 2 y 3)
-   + {.tabset} (niveles 2 y 3)
+   + {.sidebar} 
+   + {.tabset} 
    + {data-width=350} 
    + {data-height=}
 ]
@@ -241,8 +265,25 @@ Cualquier tablero la crearemos a partir de 3 niveles básicos:
 ![cat](imag/nivelesflex.gif)
 
 ]
+
 ---
 
+class: inverse, center, middle
+
+# PRÁCTICA I
+
+Nuestro primer tablero
+
+1. abrir RSTUDIO ->RMarkdown -> from template -> flexdashboard
+2. crear un diseño de dos paginas, 1 pag: graficos, 2 pag tabla datos
+3. insertar código en cada caja
+
+```{r echo=FALSE, out.width = "300px", out.height="150px",fig.align='center'}
+knitr::include_graphics("imag/aempezar.gif")
+# https://paula-moraga.github.io/book-geospatial/sec-shiny.html
+```
+
+---
 
 # Complementos
 
@@ -268,7 +309,7 @@ Los iconos los puedes buscar aqui:
 
 ---
 
-# gauge
+# Gauge
 
 ```{r, eval=FALSE}
 
@@ -281,49 +322,40 @@ gauge(satisfaction, min = 0, max = 100, symbol = '%',
 
 ![gauge](imag/gauge.png)
 
-
 ---
 
+class: inverse
 
-class: inverse, center, middle
+# Interactividad con  htmlwidgets
 
-# Interactividad simple
+- [https://www.htmlwidgets.org/](https://www.htmlwidgets.org/)
+- <http://gallery.htmlwidgets.org/>
 
-```{r echo=FALSE, fig.align='center', out.width = "600px", out.height="400px"}
-knitr::include_graphics("imag/tablero2.jpg")
+.pull-left[
+```{r eval=TRUE,echo=FALSE, out.height="400px"}
+library(ggplot2)
+ggplot(data = diamonds, aes(x = cut, fill = clarity)) +
+            geom_bar(position = "dodge")
+
 ```
+]
 
---
-
-El mentoring es la `r icon::fa('key')` para abrir muchas `r icon::fa('door-open')`
+.pull-right[
+```{r eval=TRUE, echo=FALSE, out.height="400px"}
+library(ggplot2)
+library(plotly)
+p <- ggplot(data = diamonds, aes(x = cut, fill = clarity)) +
+            geom_bar(position = "dodge")
+ggplotly(p)
+```
+]
 
 ---
 class: animated, jackInTheBox
 
-# Objetivos del programa
+# Objetos Shiny
 
-- Acelerar el proceso de desarrollo personal `r icon::fa('rocket')`
-- Favorece la transmisión de valores y conocimiento `r icon::fa('people-carry')`
-- Transmitir experiencia `r icon::fa('user-graduate')`
-- Crea vínculos personales, profesionales y de colectivo.`r icon::fa('handshake')`
-- Motiva, mejora la confianza y refuerza la iniciativa personal. `r icon::fa('award')`
-
-```{r echo=FALSE, out.width = "500px", out.height="250px",fig.align='center'}
-knitr::include_graphics("imag/civileng.jpg")
-```
----
-class: inverse, animated, fadeInLeft
-
-# Objetivos del programa II
-
-* `r icon::fa('user-friends')` Actuar sobre vuestras habilidades blandas  
-
-* `r icon::fa('hand-holding-usd')` La carrera te aporta conocimientos técnicos, el mentoring otras habilidades complementarias
-
-```{r echo=FALSE, fig.align='center', out.width = "600px", out.height="400px"}
-knitr::include_graphics("imag/competencias_soft_competencias_hard_infografia.png")
-```
-
+![o](imag/basicwidgets.png)
 
 ---
 class: inverse,animated, fadeInLeft
@@ -351,36 +383,6 @@ knitr::include_graphics("imag/jodaLuke.jpg")
 ```
 ]
 
----
-
-# Habilidades requeridas
-.pull-left[
-# Mentor
-- Escucha activa
-- Construcción gradual de confianza
-- Definición de objetivos y desarrollo de capacidades
-- Dar soporte e inspiración
-- Ser ejemplo
-
-```{r echo=FALSE, out.width = "500px", out.height="200px"}
-knitr::include_graphics("imag/Karate-Kid.jpg")
-```
-
-]
-.pull-right[
-# Pupilo
-- Escucha activa
-- Voluntad de aprendizaje
-- Construcción gradual de confianza
-- Definir objetivos
-- **Proactividad**
-
-
-```{r echo=FALSE, fig.align='center', out.width = "200px", out.height="200px"}
-knitr::include_graphics("imag/leongato.jpg")
-```
-
-]
 ---
 class: animated, jackInTheBox
 

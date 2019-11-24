@@ -10,11 +10,15 @@ output:
     vertical_layout: fill
 ---
 
-```{r setup, include=FALSE}
+```{r}
 library(flexdashboard)
 library(dygraphs)
 library(ggplot2)
 library(plotly)
+
+# leer datos de 
+pob<-read.csv2('pob_murcia1.csv')
+head(pob)
 ```
 
 # Gráficas
@@ -23,11 +27,13 @@ library(plotly)
 
 ### crostalk
 
-```{r}
+```{r message=FALSE, warning=TRUE}
 #https://plotly-r.com/introduction.html
+dtnilo<-data.frame(caudal=as.matrix(Nile), ano=time(Nile))
+
 library(plotly)
-m <- highlight_key(mpg)
-p <- ggplot(m, aes(displ, hwy)) + geom_point()
+m <- highlight_key(dtnilo)
+p <- ggplot(m, aes(ano, caudal)) + geom_point()
 gg <- highlight(ggplotly(p), "plotly_selected")
 crosstalk::bscols(gg, DT::datatable(m))
 
