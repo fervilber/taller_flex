@@ -11,6 +11,14 @@ output:
 ---
 
 ```{r setup, include=FALSE}
+# Taller UMUR- 29 - nov-2019
+# Shiny facil con flexdashboard
+# Fernando Villalba
+############################################
+# app2 - ejemplo uso de htmlwidgets simple #
+# ver en RPubs:
+# http://rpubs.com/vilBeer/taller_flex
+
 library(flexdashboard)
 library(dygraphs)
 library(ggplot2)

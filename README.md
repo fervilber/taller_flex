@@ -40,7 +40,19 @@ Por favor, traiga su propio portátil con R, RSTUDIO así como las siguientes li
 -	DT
 - ggplot2
 - prophet
-- ... 
+- dygraphs
+- crosstalk
+- purrr
+- magick
+- quantmod
+
+para instalar los paquetes puedes usar este script:
+
+```YAML
+paquetes<-c("flexdashboard", "Shiny", "crosstalk",	"leaflet", "plotly",	"DT", "ggplot2", "prophet" ,"dygraphs", "crosstalk", "purrr", "magick", "quantmod", "forecast")
+install.packages(paquetes)
+
+```
 
 ## CÓDIGO DE CONDUCTA
 Esperamos que todos los asistentes cumplan con nuestro Código de conducta UMUR.

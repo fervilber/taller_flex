@@ -1,5 +1,5 @@
 ---
-title: "App5-Shiny"
+title: "App4-Shiny"
 author: "Taller-UMUR"
 date: "2019"
 output: 
@@ -22,7 +22,9 @@ runtime: shiny
 #  1- modificacion de una imagen    #
 #  2- control de un mapa            #
 #####################################
-
+# publicado en:
+# https://vilber.shinyapps.io/app4/
+#####################################
 library(flexdashboard)
 library(ggplot2)
 library(plotly)

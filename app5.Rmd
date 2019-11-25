@@ -12,9 +12,15 @@ runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
+
+# Taller UMUR- 29 - nov-2019
+# Shiny facil con flexdashboard
+# Fernando Villalba
+#####################################
+# app5 - ejemplo uso Shiny          #
 # este ejemplo crea una app para pronostico de valores
+#####################################
 # cargo las librerías
-# https://www.youtube.com/watch?v=rV-hhKBRKbI&t=0s
 library(flexdashboard)
 library(prophet)
 #library(lubridate)
@@ -23,43 +29,8 @@ library(DT)
 library(dygraphs)
 library(quantmod)
 ```
-```{r eval=FALSE}
 
-dat_bolsa<-read.csv("datosbolsa.csv")
-#head(dat_bolsa)
-dat_bolsa$ref.date<-as.Date(dat_bolsa$ref.date)
-#read.csv(file.choose(),header=T)
-# nos quedamos con solo cierre
-pq_dat<-dat_bolsa[,c("price.close","ref.date","ticker")]
-# cambiamos los nombres
-names(pq_dat)<-c("close","date","ticker")
-```
-
-```{r eval=FALSE}
-# para descargar en linea activar este script
-library(quantmod)
-library(BatchGetSymbols)
-
-# descarga lso datos de las siguienets empresas
-#dat_bolsa <- getSymbols(c("MSFT", "HPQ", "INTC"), from = "2014-01-01",  auto.assign=TRUE)
-# solo para guardar el fichero la primera vez
-  mis.valores <- c('MSFT','GOOGL','SAN.MC','TEF.MC')
-  fecha.ini <- Sys.Date()-365
-  fecha.fin <- Sys.Date()
-      
-  datosvalores<- BatchGetSymbols(tickers = mis.valores,
-                               first.date = fecha.ini,
-                               last.date = fecha.fin )
-  # se forma una lista
-  # nos quedamos solo con los valores
-  dat_bolsa<-datosvalores$df.tickers
-  #str(datosvalores)
-  
- # write.csv(datos,"datosbolsa.csv", row.names = FALSE)
-```
-
-
-# Grafico {data-icon="fa-chart-area"}
+# Gráfico {data-icon="fa-chart-area"}
 
 ## entradas {.sidebar }
 
@@ -74,12 +45,11 @@ dateInput('fechaini', 'Selecciona la fecha inicio:',
           value = Sys.Date()-365,
           weekstart = 1,
           language = "es")
-
 ```
 
 ## Graf
 
-### Graficos pronostico
+### Serie temporal
 
 ```{r graficas}
 # Grafica de valor seleccionado
@@ -88,21 +58,19 @@ dateInput('fechaini', 'Selecciona la fecha inicio:',
 idval<- reactive({
   # auto.assign=FALSE para guardar como variable
   aux<-getSymbols(input$valor, from = input$fechaini,  auto.assign=FALSE)
-  #dat<- aux[,c(1)] # nos quedamos solo con la apertuta
-  #return(dat)
   return(aux)
   })
 
-#pintamos la gráfica
+#pintamos la gráfica con dygraph
 #output$plot1 <-  renderDygraph({
 #  dygraph(idval()[,c(1)],main =input$valor ) # ojo es una funcion ya
  #dygraph(dat,main ='lala' ) 
 #})
-
 #dygraphOutput("plot1")
   
+# pintamos la grafica con chartSeries de quantmod
 output$plot1<-renderPlot({    
-  chartSeries(idval(), theme = chartTheme("white"),
+  chartSeries(idval(),name = input$valor, theme = chartTheme("white"),
     type = "candlesticks", log.scale = T, TA = c(addVo()))
 })
 
@@ -114,9 +82,8 @@ plotOutput('plot1')
 
 ### tabla de datos
 
-```{r eval=TRUE}
+```{r tablaa}
 # pinta la tabla
-
 DT::renderDataTable({
   data <- idval()
   DT::datatable(data, options = list(
@@ -133,56 +100,33 @@ DT::renderDataTable({
 ## entradas2 {.sidebar }
 
 ```{r}
-
+# entrada de dias de pronostico
 sliderInput('ndias','Dias hacia el futuro del pronostico:',min=5, max=365,value=60)
 
 ```
 
 ## pronosticos_con_facebook
 
-```{r}
-#aux<-getSymbols("TEF.MC", from = "2018-01-01",  auto.assign=FALSE)
-#index(aux)
-#colnames(data)<-c('ds','y')
-#m<-prophet(data)
- # rownames(data) <- NULL
-#  colnames(data)
-#  data<-data.frame(ds=as.Date(index(aux)), y = log(aux[,c(5)]))
-#ds
-#str(ds)
-
-# https://www.youtube.com/watch?v=rV-hhKBRKbI&t=186s
+```{r forecast}
+#dcreamos la data frame de entrada a prophet
 datafore<-reactive({
   #datlog <- data.frame(as.Date(index(idval())),log(idval()[,c(5)])) 
   datlog <- data.frame(as.Date(index(idval())),(idval()[,c(4)])) 
-  
   rownames(datlog) <- NULL
-  colnames(datlog)<-c("ds","y")
+  colnames(datlog)<-c("ds","y") # nombres que debe tener ds y
   return(datlog)
 })
 
-library(forecast)
-
-#renderTable({datafore()}) 
-#renderPlot({ 
+# usamos la salida de dygraph
 renderDygraph({
   m<-prophet(datafore())
   future_val<-make_future_dataframe(m,periods = input$ndias)
   forecast<-predict(m,future_val)
   
    #plot(m,forecast)
- #prophet_plot_components(m, forecast)
+   #prophet_plot_components(m, forecast)
    dyplot.prophet(m,forecast)
-   #m$history$y
 })
 
-#creamos una tabla de n dias al futuro
-
-
-# realizamos la prediccion
-
-#renderPlot({
-#  plot(pronos()[2],pronos()[1])
-#})
 ```
 

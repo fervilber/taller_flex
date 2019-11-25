@@ -74,15 +74,15 @@ class: animated, fadeInRight
 
 - ¿Qué es *flexdashboard*?
 
-- Diseño de paneles `r icon::fa('arrow-alt-circle-right')` **Práctica**
+- Diseño de paneles `r icon::fa('arrow-alt-circle-right')` **Práctica 1**
  
-- Iteractividad I  (*htmlWidgets*) `r icon::fa('arrow-alt-circle-right')` **Práctica**
+- Iteractividad I  (*htmlWidgets*) `r icon::fa('arrow-alt-circle-right')` **Práctica 2**
 
-- Iteractividad II (*htmlWidgets*) `r icon::fa('arrow-alt-circle-right')` **Práctica** 
+- Iteractividad II (*crosstalk*) `r icon::fa('arrow-alt-circle-right')` **Práctica 3** 
 
-- Iteractividad III (*Shiny* ) `r icon::fa('arrow-alt-circle-right')` **Práctica **
+- Iteractividad III (*Shiny* ) `r icon::fa('arrow-alt-circle-right')` **Práctica 4**
 
-- Diseño avanzado y publicación `r icon::fa('arrow-alt-circle-right')` **Práctica**
+- Diseño avanzado y publicación `r icon::fa('arrow-alt-circle-right')` **Práctica 5**
 
 
 ![](imag/firststep.jpg)
@@ -99,7 +99,7 @@ background-size: cover
 
 - <https://rmarkdown.rstudio.com/flexdashboard/>
 
-![dashboard-cartoon](flexdashboard-talk-master/dashboard-cartoon.jpg)
+![dashboard-cartoon](imag/dashboard-cartoon.jpg)
 
 Los paneles permiten comunicar grandes cantidaes de informacion visual rápidamente. Son herramientas esenciales en la toma de decisiones empresariales
 
@@ -129,14 +129,14 @@ https://rstudio.github.io/shinydashboard/structure.html
 
 ## Estáticos (lado cliente)
 
-- [informe de ventas](salesreport.html)
-- [informe de cementerios nucleares](wastelands.html)
+- [informe de ventas](ejemplos/salesreport.html)
+- [cementerios nucleares USA](ejemplos/wastelands.html)
 
 ## Dinámicos (lado servidor)
 
 - [Informe de diversidad de razas en USA](https://walkerke.shinyapps.io/neighborhood_diversity/)
 
-- [contaminacion en el mundo PM2.5](air_polution.html)
+- [contaminacion en el mundo PM2.5](https://paula-moraga.github.io/book-geospatial/sec-dashboardswithshiny.html)
 
 ---
 
@@ -158,7 +158,7 @@ knitr::include_graphics("imag/shiny.png")
 
 ---
 
-<iframe src="flexdashboard-talk-master/wastelands.html" width="800" height="600">
+<iframe src="ejemplos/wastelands.html" width="800" height="600">
 </iframe>
 
 ---
@@ -169,7 +169,7 @@ knitr::include_graphics("imag/shiny.png")
 ---
 
 
-# Crear una app 
+# Crear una app fácil con flex 
 
  1. Diseño de la plantilla 
  2. Programación y relleno de cajas
@@ -180,7 +180,7 @@ knitr::include_graphics("imag/shiny.png")
 
 ---
 
-# Fichero de partida rmarkdown
+# Fichero de partida Rmarkdown
 
 .pull-left[ app.Rmd
 
@@ -257,12 +257,12 @@ Cualquier tablero lo crearemos a partir de 3 niveles básicos:
    + {.sidebar} 
    + {.tabset} 
    + {data-width=350} 
-   + {data-height=}
+   + {data-height=600}
 ]
 
 .pull-right[
 
-![cat](imag/nivelesflex.gif)
+![niveles flex](imag/nivelesflex.gif)
 
 ]
 
@@ -276,12 +276,19 @@ Nuestro primer tablero
 
 1. abrir RSTUDIO ->RMarkdown -> from template -> flexdashboard
 2. crear un diseño de dos paginas, 1 pag: graficos, 2 pag tabla datos
-3. insertar código en cada caja
+3. insertar código de graficos en cada caja 
 
 ```{r echo=FALSE, out.width = "300px", out.height="150px",fig.align='center'}
 knitr::include_graphics("imag/aempezar.gif")
 # https://paula-moraga.github.io/book-geospatial/sec-shiny.html
 ```
+
+---
+
+# Practica 1 resultado 
+
+![app1](imag/app1.png)
+
 
 ---
 
@@ -298,7 +305,7 @@ valueBox(articles,
 ```
 
 
-![valuebox](flexdashboard-talk-master/valuebox.png)
+![valuebox](imag/valuebox.png)
 
 Los iconos los puedes buscar aqui:
 
@@ -309,7 +316,9 @@ Los iconos los puedes buscar aqui:
 
 ---
 
-# Gauge
+# Complementos
+
+## Gauge
 
 ```{r, eval=FALSE}
 
@@ -352,43 +361,55 @@ ggplotly(p)
 ]
 
 ---
+
+class: inverse, center, middle
+
+# PRÁCTICA 2
+
+Sustituimos los gráficos anteriores *htmlwidgets* y añadimos complementos.
+
+![app2](imag/app2.png)
+
+---
+
+# Interacción III - Práctica 3
+
+Hay una forma intermedia entre el html de cliente y el que trabaja en servidor, se trata de usar datos comunes entre htmlwidget con [crosstalk](https://rstudio.github.io/crosstalk/):
+
+Es una librería javascript que permite compartir datos entre widget en el lado cliente.
+
+Se usa de manera muy simple compartiendo unos datos con la función: *highlight_key* o *SharedData$new*.
+
+![app3](imag/app3.png)
+---
+# Empezamos con Shiny
+
+## Input
+Shiny se ejecuta en el servidor no en el cliente. Para indicar qué variables cambian se han programado una serie de objetos que permiten dar las entradas que admite el servidor estos objetos son los inputs de Shiny.
+
+
+## Output
+Es lo que devuelve el servidor y 
+
+![render](imag/rendershiny.png)
+---
 class: animated, jackInTheBox
 
-# Objetos Shiny
+# Objetos Shiny  **input**
 
-![o](imag/basicwidgets.png)
+![input shiny](imag/basicwidgets.png)
 
 
 ---
 
-# themes flexdashboard
+![](imag/inputshiny.png)
+
+---
+# Diseño
+
+## themes flexdashboard
 
 - <http://www.sangerw.com/blog/flexdashboardthemes/>
----
-class: inverse,animated, fadeInLeft
-
-# ¿Quíenes intervienen?
-
-.pull-left[
-
-# Mentor
-
-- Facilita el desarrollo del **pupilo**, a través del intercambio de sus propios recursos, conocimientos, valores, habilidades, perspectivas, actitudes y competencias.
-
-- Le ofrece la oportunidad de desarrollar nuevas perspectivas, *hacerse preguntas*, conocer otras inquietudes y ampliar su visión  personal y profesional.
-
-
-]
-
-.pull-right[
-# Pupilo
-
-- El **pupilo** desarrollará habilidades y conocimientos que le ayudarán a alcanzar las metas que *él mismo defina*.
-
-```{r echo=FALSE, out.width = "500px", out.height="200px"}
-knitr::include_graphics("imag/jodaLuke.jpg")
-```
-]
 
 ---
 class: animated, jackInTheBox

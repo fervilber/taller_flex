@@ -1,8 +1,0 @@
----
-title: "Flex Dashboard"
-output: flexdashboard::flex_dashboard
----
-
-### My box
-
-This is some text in a box.

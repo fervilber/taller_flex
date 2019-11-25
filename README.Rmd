@@ -48,6 +48,12 @@ Por favor, trae tu propio portátil con R y RSTUDIO así como las siguientes lib
 - prophet
 - ... 
 
+para instalar los paquetes puedes usar este script:
+```{r eval=FALSE}
+paquetes<-c("flexdashboard", "Shiny", "crosstalk",	"leaflet", "plotly",	"DT", "ggplot2", "prophet" ,"dygraphs", "crosstalk", "purrr", "magick", "quantmod", "forecast")
+install.packages(paquetes)
+```
+
 ## CÓDIGO DE CONDUCTA
 Esperamos que todos los asistentes cumplan con nuestro código de conducta UMUR.
 Este grupo fue creado para que quienes se identifican como usuarios de R tengan un lugar  para aprender y disfrutar.

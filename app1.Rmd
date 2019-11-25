@@ -13,10 +13,10 @@ output:
 
 ### Caudales máximos anuales
 ```{r}
-plot.ts(Nile, col="blue",
-     main="Caudales max históricos en el Nilo",
-     xlab="Fecha",
-     ylab="Caudal m3/s")
+  plot.ts(Nile, col="blue",
+       main="Caudales max históricos en el Nilo",
+       xlab="Fecha",
+       ylab="Caudal m3/s")
 
 ```
 
@@ -27,12 +27,12 @@ plot.ts(Nile, col="blue",
 ### Gráfica estadística
 
 ```{r}
-#histograma
-hist(Nile, col="skyblue",
-     main="Caudales en el Nilo",
-     xlab="Caudal m3/s",
-     ylab="Frecuencia")
-rug(Nile) # marcas
+  #histograma
+  hist(Nile, col="skyblue",
+       main="Caudales en el Nilo",
+       xlab="Caudal m3/s",
+       ylab="Frecuencia")
+  rug(Nile) # marcas
 ```
 
 > grafica de frecuencias de caudales en el río Nilo
@@ -40,11 +40,11 @@ rug(Nile) # marcas
 ### Boxplot
 
 ```{r}
-
-boxplot(Nile, col="red",
-        horizontal=TRUE,
-        xlab="caudales maximos del Nilo")
-rug(Nile) # añado marcas
+  
+  boxplot(Nile, col="red",
+          horizontal=TRUE,
+          xlab="caudales maximos del Nilo")
+  rug(Nile) # añado marcas
 ```
 
 > Variable caudal max anual

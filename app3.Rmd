@@ -19,6 +19,8 @@ output:
 #####################################
 # app3 - ejemplo uso de htmlwidgets #
 #####################################
+# publicado en RPubs como:
+# http://rpubs.com/vilBeer/taller_flex_app3
 
 library(flexdashboard)
 library(ggplot2)
@@ -57,8 +59,10 @@ sd <- highlight_key(dat_compartidos,~Municipio)
 ```{r }
 # creamos grafico de barras con poblacion de cada municipio
 p <-  ggplot(sd, aes(x = Municipio, y = X2018))+
+  #sprintf('%8s', pob$X2018)
   labs(y = "Poblacion hab")+
-  theme(axis.text.x =element_text(color="blue", size=6))+
+  theme(axis.text.x =element_text(color="blue", size=6,angle=90, vjust=.3))+
+  scale_y_continuous(labels = scales::comma)+
   geom_col(fill=rainbow(45))+
   coord_flip() 
 
