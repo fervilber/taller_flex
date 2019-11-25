@@ -1,0 +1,188 @@
+---
+title: "app5-Bolsa"
+output:
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    logo: "imag/logoR.png"
+    social: menu
+    source_code: embed
+    theme: united
+runtime: shiny 
+---
+
+```{r setup, include=FALSE}
+# este ejemplo crea una app para pronostico de valores
+# cargo las librerías
+# https://www.youtube.com/watch?v=rV-hhKBRKbI&t=0s
+library(flexdashboard)
+library(prophet)
+#library(lubridate)
+library(ggplot2)
+library(DT)
+library(dygraphs)
+library(quantmod)
+```
+```{r eval=FALSE}
+
+dat_bolsa<-read.csv("datosbolsa.csv")
+#head(dat_bolsa)
+dat_bolsa$ref.date<-as.Date(dat_bolsa$ref.date)
+#read.csv(file.choose(),header=T)
+# nos quedamos con solo cierre
+pq_dat<-dat_bolsa[,c("price.close","ref.date","ticker")]
+# cambiamos los nombres
+names(pq_dat)<-c("close","date","ticker")
+```
+
+```{r eval=FALSE}
+# para descargar en linea activar este script
+library(quantmod)
+library(BatchGetSymbols)
+
+# descarga lso datos de las siguienets empresas
+#dat_bolsa <- getSymbols(c("MSFT", "HPQ", "INTC"), from = "2014-01-01",  auto.assign=TRUE)
+# solo para guardar el fichero la primera vez
+  mis.valores <- c('MSFT','GOOGL','SAN.MC','TEF.MC')
+  fecha.ini <- Sys.Date()-365
+  fecha.fin <- Sys.Date()
+      
+  datosvalores<- BatchGetSymbols(tickers = mis.valores,
+                               first.date = fecha.ini,
+                               last.date = fecha.fin )
+  # se forma una lista
+  # nos quedamos solo con los valores
+  dat_bolsa<-datosvalores$df.tickers
+  #str(datosvalores)
+  
+ # write.csv(datos,"datosbolsa.csv", row.names = FALSE)
+```
+
+
+# Grafico {data-icon="fa-chart-area"}
+
+## entradas {.sidebar }
+
+```{r}
+
+#selectInput('valor', 'Selecciona un valor', unique(datosvalores$df.control$ticker) ,multiple=F)
+valores<-c('MSFT','GOOGL','SAN.MC','TEF.MC')
+
+selectInput('valor', 'Selecciona un valor:', valores ,multiple=F,selected = 1)
+
+dateInput('fechaini', 'Selecciona la fecha inicio:',
+          value = Sys.Date()-365,
+          weekstart = 1,
+          language = "es")
+
+```
+
+## Graf
+
+### Graficos pronostico
+
+```{r graficas}
+# Grafica de valor seleccionado
+#idvalor<-reactive(input$valor)
+
+idval<- reactive({
+  # auto.assign=FALSE para guardar como variable
+  aux<-getSymbols(input$valor, from = input$fechaini,  auto.assign=FALSE)
+  #dat<- aux[,c(1)] # nos quedamos solo con la apertuta
+  #return(dat)
+  return(aux)
+  })
+
+#pintamos la gráfica
+#output$plot1 <-  renderDygraph({
+#  dygraph(idval()[,c(1)],main =input$valor ) # ojo es una funcion ya
+ #dygraph(dat,main ='lala' ) 
+#})
+
+#dygraphOutput("plot1")
+  
+output$plot1<-renderPlot({    
+  chartSeries(idval(), theme = chartTheme("white"),
+    type = "candlesticks", log.scale = T, TA = c(addVo()))
+})
+
+plotOutput('plot1')
+
+```
+
+# Datos {data-icon="fa-database"}
+
+### tabla de datos
+
+```{r eval=TRUE}
+# pinta la tabla
+
+DT::renderDataTable({
+  data <- idval()
+  DT::datatable(data, options = list(
+    bPaginate = TRUE
+  ))
+})
+
+```
+
+> tabla de datos
+
+# Pronósticos {data-icon="fa-chart-line"}
+
+## entradas2 {.sidebar }
+
+```{r}
+
+sliderInput('ndias','Dias hacia el futuro del pronostico:',min=5, max=365,value=60)
+
+```
+
+## pronosticos_con_facebook
+
+```{r}
+#aux<-getSymbols("TEF.MC", from = "2018-01-01",  auto.assign=FALSE)
+#index(aux)
+#colnames(data)<-c('ds','y')
+#m<-prophet(data)
+ # rownames(data) <- NULL
+#  colnames(data)
+#  data<-data.frame(ds=as.Date(index(aux)), y = log(aux[,c(5)]))
+#ds
+#str(ds)
+
+# https://www.youtube.com/watch?v=rV-hhKBRKbI&t=186s
+datafore<-reactive({
+  #datlog <- data.frame(as.Date(index(idval())),log(idval()[,c(5)])) 
+  datlog <- data.frame(as.Date(index(idval())),(idval()[,c(4)])) 
+  
+  rownames(datlog) <- NULL
+  colnames(datlog)<-c("ds","y")
+  return(datlog)
+})
+
+library(forecast)
+
+#renderTable({datafore()}) 
+#renderPlot({ 
+renderDygraph({
+  m<-prophet(datafore())
+  future_val<-make_future_dataframe(m,periods = input$ndias)
+  forecast<-predict(m,future_val)
+  
+   #plot(m,forecast)
+ #prophet_plot_components(m, forecast)
+   dyplot.prophet(m,forecast)
+   #m$history$y
+})
+
+#creamos una tabla de n dias al futuro
+
+
+# realizamos la prediccion
+
+#renderPlot({
+#  plot(pronos()[2],pronos()[1])
+#})
+```
+

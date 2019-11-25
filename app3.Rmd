@@ -1,6 +1,6 @@
 ---
 title: "Poblaciones CARM"
-author: "FVB"
+author: "Taller-UMUR"
 date: "2019"
 output:
   flexdashboard::flex_dashboard:
@@ -13,7 +13,12 @@ output:
 ---
 
 ```{r}
-
+# Taller UMUR- 29 - nov-2019
+# Shiny facil con flexdashboard
+# Fernando Villalba
+#####################################
+# app3 - ejemplo uso de htmlwidgets #
+#####################################
 
 library(flexdashboard)
 library(ggplot2)
@@ -24,32 +29,36 @@ library(crosstalk)
 
 # leemos los datos de un csv
 pob<-read.csv2('pob_murcia1.csv',stringsAsFactors = FALSE)
-#head(pob)
-# trasnformamos a numero la lat y long
+
+# Transformamos a numero la lat y long
 pob$long<-as.numeric(pob$long)
 pob$lat<-as.numeric(pob$lat)
-# ordenamos los datos de poblecion del 2018
-pob<-pob[order(pob$X2018),]
+
+# Ordenamos los datos de poblacion del 2018
+pob<-pob[order(pob$X2018, decreasing = TRUE),]
+# para que nos salga ordenado en la grafica ordenamos los niveles
+# del factor por orden tambien de población
 pob$Municipio<- factor(pob$Municipio,levels=pob$Municipio)
 
 # Usamos crosstalk para compartir entre htmlwidgets
 dat_compartidos<-pob[,c('Municipio','lat','long','X2018')]
-# sd=share data
-#sd <- highlight_key(dat_compartidos,~Municipio)
-sd <- SharedData$new(dat_compartidos)
+# sd=shared data (datos compartidos)
+sd <- highlight_key(dat_compartidos,~Municipio)
+#sd <- SharedData$new(dat_compartidos)
 
 ```
 
 # Interaccion III {data-icon="ion-stats-bars"}
 
-## Col 1 {data-width=300}
+## Col 1 {data-width=400}
 
-### mapa
+### Gráfica de habitantes por población
 
 ```{r }
 # creamos grafico de barras con poblacion de cada municipio
 p <-  ggplot(sd, aes(x = Municipio, y = X2018))+
   labs(y = "Poblacion hab")+
+  theme(axis.text.x =element_text(color="blue", size=6))+
   geom_col(fill=rainbow(45))+
   coord_flip() 
 
@@ -61,11 +70,10 @@ gg <- highlight(ggplotly(p), on="plotly_click", off = "plotly_doubleclick")
 gg
 
 ```
-> Grafica de municipios
 
 ## col2 
 
-### Mapa
+### Mapa poblaciones CARM
 
 ```{r}
 #PARA MAS INFORMACION DE COMO DIBUJAR MAPAS CON LEAFLET:
@@ -75,7 +83,7 @@ gg
 ```
 > Mapa de Murcia
 
-### Gráfica población
+### Tabla de datos
 
 ```{r}
 
@@ -88,15 +96,20 @@ DT::datatable(sd,
 
 ```
 
-> Tabla de poblaciones
+> Tabla 
 
 # Instrucciones {data-icon="fa-map"}
 
 ## col2
 
-### Herramientas adicionales
+### Herramientas
 
-En este ejemplo de aplicación hemos usado las siguientes librerías de R:
+Ejemplo de aplicación con interacciones multiples que hace uso de htmlwidgets.
+Esta aplicación se ejecuta completamente en el lado cliente.
+
+El uso compartido de la base de datos se hace gracias a la librería `crosstalk`.
+
+Hemos usado las siguientes librerías de R:
 
 * [Flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) para crear el contenido
 * [Leaflet](https://rstudio.github.io/leaflet/) para el mapa interactivo

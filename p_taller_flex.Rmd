@@ -358,6 +358,12 @@ class: animated, jackInTheBox
 
 ![o](imag/basicwidgets.png)
 
+
+---
+
+# themes flexdashboard
+
+- <http://www.sangerw.com/blog/flexdashboardthemes/>
 ---
 class: inverse,animated, fadeInLeft
 

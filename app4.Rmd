@@ -1,90 +1,151 @@
 ---
-title: "fer_app"
+title: "App5-Shiny"
+author: "Taller-UMUR"
+date: "2019"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
     self_contained: true
+    theme: cerulean
+    logo: "imag/umur.png"
+    source_code: embed
 runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
+# Taller UMUR- 29 - nov-2019
+# Shiny facil con flexdashboard
+# Fernando Villalba
+#####################################
+# app4 - ejemplo uso Shiny          #
+#  1- modificacion de una imagen    #
+#  2- control de un mapa            #
+#####################################
+
 library(flexdashboard)
 library(ggplot2)
 library(plotly)
 library(DT)
 library(leaflet)
-library(crosstalk)
-library(sf)
+#library(crosstalk)
+library(purrr) # para listas del mapa
+library(magick) # para la app de imagen
+
 # leemos los datos de un csv
 pob<-read.csv2('pob_murcia1.csv',stringsAsFactors = FALSE)
-#head(pob)
-# trasnformamos a numero la lat y long
+
+# Transformamos a numero la lat y long
 pob$long<-as.numeric(pob$long)
 pob$lat<-as.numeric(pob$lat)
-# ordenamos los datos de poblecion del 2018
-pob<-pob[order(pob$X2018),]
+
+# Ordenamos los datos de poblacion del 2018
+pob<-pob[order(pob$X2018, decreasing = TRUE),]
+# para que nos salga ordenado en la grafica ordenamos los niveles
+# del factor por orden tambien de población
 pob$Municipio<- factor(pob$Municipio,levels=pob$Municipio)
+```
+
+# Imagen {data-icon="fa-image"}
+
+## Entradas {.sidebar}
+
+```{r}
+# Pag1. 
+# controlaremos completamente una imagen descargada con flexdashboard
+
+# Controles Shiny
+# mas aquí: https://shiny.rstudio.com/gallery/widget-gallery.html
+fileInput("img","Elige una imagen:",accept=c('image/png', 'image/jpeg'))
+textInput("size", "Tamaño", value = "500x500") # limitamos el tamaño 
+sliderInput("rotation", "Rotacion", 0, 360, 0,step = 5)
+sliderInput("blur", "Ruido-Blur", 0, 20, 0)
+sliderInput("implode", "Implosionar", -1, 1, 0, step = 0.01)
+# cuadro de efectos posibles:
+checkboxGroupInput("effects", "Efectos",
+                         choices = list("negate", "charcoal", "edge", "flip", "flop"))
 
 ```
 
-# cosas
+## Visor de imagen
 
-## Inputs {.sidebar}
+### app Imagen
 
 ```{r}
-# Rate at which to flag high download traffic
-sliderInput("maxlect", "Maximo num filas leidas:",
-            min = 10, max = 500, value = 50, step = 10
-)
-# Maximum number of raw data rows to keep
-numericInput("maxrows", "valor fijo:", 50)
+# En esta caja ponemos la imagen y veremos las transformaciones sobre ella
+# leemos una de inicio
+image <- image_read("imag/sorpresa.jpg")
 
-selectInput('variable', 'Variable', names(pob))
+# la salida reactiva :
+output$img <-  renderImage({
+    if (length(input$img$datapath))
+      image <<- image_read(input$img$datapath)
+      info <- image_info(image)
+      
+    if("negate" %in% input$effects)
+      image <- image_negate(image)
 
-submitButton(text = "Apply Changes", icon = icon("refresh"))
+    if("charcoal" %in% input$effects)
+      image <- image_charcoal(image)
 
-dateRangeInput("daterange3", "Date range:",
-                 start  = "2001-01-01",
-                 end    = "2010-12-31",
-                 min    = "2001-01-01",
-                 max    = "2012-12-21",
-                 format = "mm/dd/yy",
-                 separator = " - ")
+    if("edge" %in% input$effects)
+      image <- image_edge(image)
 
-checkboxGroupInput("variable", "Variables to show:",names(pob))
-                  
+    if("flip" %in% input$effects)
+      image <- image_flip(image)
+
+    if("flop" %in% input$effects)
+      image <- image_flop(image)
+    #  guarda el fichero
+    tmpfile <- image %>%
+      image_rotate(input$rotation) %>%
+      image_implode(input$implode) %>%
+      image_blur(input$blur, input$blur) %>%
+      image_resize(input$size) %>%
+      image_write(tempfile(fileext='jpg'), format = 'jpg')
+
+    # Retorna una lista como imagen
+    list(src = tmpfile, contentType = "image/jpeg")
+  })
+
+
+plotOutput("img")
+ 
 ```
 
-# Mapa
+> imagen transformada
 
-## Maejor
+# Mapas {data-icon="fa-map"}
 
-### Mapa
+## Mapascol
+
+### Mapa Shiny interactivo
 
 ```{r}
-renderLeaflet({
-leaflet(pob) %>% addTiles() %>% addMarkers(popup= ~paste("Habitantes de ", Municipio, X2018))
-})
-```
-
-
-### PTO LUMBRERAS
-```{r}
+# controles sobre un mapa con shiny
  output$map <- renderLeaflet({
   leaflet() %>%
     addTiles() %>%
-    addMarkers(data = pob,
-               layerId = ~Municipio)
+        addProviderTiles(providers$OpenStreetMap, group = "OSM")  %>%
+        addProviderTiles("Stamen.TonerLite",group = "Toner") %>%
+        addProviderTiles("HikeBike", group = "Bike") %>% 
+        addProviderTiles("Esri", group = "Esri") %>%
+        addProviderTiles("Stamen.Watercolor", group="Acuarela") %>%
+    addLayersControl(baseGroups = c("OSM","Toner", "Bike", "Esri","Acuarela")) %>%
+    addMarkers(data = pob, label = pob$Municipio,
+               layerId = ~Municipio
+              )
 
 })
 
 leafletOutput('map') 
 ```
 
-## cosas
+> mapa interactivo con Shiny
 
-### marcas
+## Acciones sobre el mapa
+
+### Detecta marca click
 
 ```{r}
 
@@ -92,8 +153,8 @@ leafletOutput('map')
 # se explica aquñi:
 # https://rstudio.github.io/leaflet/shiny.html
 
-
-
+# El resultado es una lista usamos walk para imprimirla mejor
+# evento sobre marca input$map_marker_click
 click_marker <- eventReactive(input$map_marker_click, {
 
   x <- input$map_marker_click
@@ -101,16 +162,18 @@ click_marker <- eventReactive(input$map_marker_click, {
   return(x)
 })
 
+# usamos reactive para imprimir el valor
+reactive(walk(click_marker(), print))
 #input$MAPID_zoom
-renderText({ 
-  print(HTML(paste(click_marker()$id),click_marker()$lat,click_marker()$lng, sep="\t"))
-  })
+#renderText({ 
+    #print(HTML(paste(click_marker()$id),click_marker()$lat,click_marker()$lng, sep="\t"))
+#  })
 ```
 
-### x-y
+### click x-y
 
 ```{r}
-
+# evento sobre mapa input$map_click 
 renderText({
   
   print(HTML(paste(input$map_click$lat),input$map_click$lng, sep="\t"))
@@ -125,7 +188,6 @@ renderText({
 
 renderText({
   input$map_zoom
-  
 })
 
 ```
@@ -134,10 +196,12 @@ renderText({
 
 ```{r}
 
-renderText({
-  
-  print(HTML(paste(input$map_bounds$north),input$map_bounds$east, sep="\t"))
-  
-})
 
+#renderText({
+  a<-reactive(walk(input$map_bounds, print))
+  a
+#  print(HTML(paste(input$map_bounds$north),input$map_bounds$east, sep="\t"))
+#})
+
+  
 ```
