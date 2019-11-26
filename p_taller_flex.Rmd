@@ -157,8 +157,9 @@ knitr::include_graphics("imag/shiny.png")
 
 
 ---
+# Ejemplo Shiny 
 
-<iframe src="ejemplos/wastelands.html" width="800" height="600">
+<iframe src="https://inwtlab.shinyapps.io/ecomAnalytics/" width="800" height="600">
 </iframe>
 
 ---
@@ -351,7 +352,7 @@ ggplot(data = diamonds, aes(x = cut, fill = clarity)) +
 ]
 
 .pull-right[
-```{r eval=TRUE, echo=FALSE, out.height="400px"}
+```{r eval=TRUE, echo=FALSE, out.height="400px",warning=FALSE,message=FALSE}
 library(ggplot2)
 library(plotly)
 p <- ggplot(data = diamonds, aes(x = cut, fill = clarity)) +
@@ -371,14 +372,18 @@ Sustituimos los gráficos anteriores *htmlwidgets* y añadimos complementos.
 ![app2](imag/app2.png)
 
 ---
-
-# Interacción III - Práctica 3
+# Interacción III- crosstalk
 
 Hay una forma intermedia entre el html de cliente y el que trabaja en servidor, se trata de usar datos comunes entre htmlwidget con [crosstalk](https://rstudio.github.io/crosstalk/):
 
 Es una librería javascript que permite compartir datos entre widget en el lado cliente.
 
 Se usa de manera muy simple compartiendo unos datos con la función: *highlight_key* o *SharedData$new*.
+
+---
+
+# Interacción III - Práctica 3
+
 
 ![app3](imag/app3.png)
 ---
@@ -387,11 +392,16 @@ Se usa de manera muy simple compartiendo unos datos con la función: *highlight_
 ## Input
 Shiny se ejecuta en el servidor no en el cliente. Para indicar qué variables cambian se han programado una serie de objetos que permiten dar las entradas que admite el servidor estos objetos son los inputs de Shiny.
 
-
 ## Output
-Es lo que devuelve el servidor y 
+Es el objeto de se calcula en el servidor
 
-![render](imag/rendershiny.png)
+![](http://juliawrobel.com/tutorials/images/what_is_shiny.png)
+
+---
+# Reactividad
+
+
+![](https://cyberhelp.sesync.org/basic-Shiny-lesson/assets/images/arrows3.png)
 ---
 class: animated, jackInTheBox
 
@@ -409,9 +419,9 @@ class: animated, jackInTheBox
 
 # Outputs
 
-Para que la variable reaccione en la app, hay que insertarla dentro de una output, que indica objetos que dibuja el servidor.
+Para que la variable reaccione en la app, hay que insertarla dentro de una output, que indica objetos que dibuja el servidor y que están relacionados intimamente con tipos de salida de R.
 
-
+![render](https://bookdown.org/weicheng/shinyTutorial/images/outputs.png)
 
 ---
 
