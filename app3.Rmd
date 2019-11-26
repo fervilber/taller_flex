@@ -10,6 +10,8 @@ output:
     vertical_layout: fill
     theme: paper
     source_code: embed
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r}
@@ -30,11 +32,13 @@ library(leaflet)
 library(crosstalk)
 
 # leemos los datos de un csv
-pob<-read.csv2('pob_murcia1.csv',stringsAsFactors = FALSE)
+pob<-read.csv2('pob_murcia1.csv',stringsAsFactors = FALSE)#,fileEncoding="utf-8")
 
 # Transformamos a numero la lat y long
 pob$long<-as.numeric(pob$long)
 pob$lat<-as.numeric(pob$lat)
+
+#iconv(pob$Municipio, to = "ISO-8859-1")
 
 # Ordenamos los datos de poblacion del 2018
 pob<-pob[order(pob$X2018, decreasing = TRUE),]
@@ -56,10 +60,9 @@ sd <- highlight_key(dat_compartidos,~Municipio)
 
 ### Gráfica de habitantes por población
 
-```{r }
+```{r barras, message=FALSE, warning=FALSE}
 # creamos grafico de barras con poblacion de cada municipio
 p <-  ggplot(sd, aes(x = Municipio, y = X2018))+
-  #sprintf('%8s', pob$X2018)
   labs(y = "Poblacion hab")+
   theme(axis.text.x =element_text(color="blue", size=6,angle=90, vjust=.3))+
   scale_y_continuous(labels = scales::comma)+

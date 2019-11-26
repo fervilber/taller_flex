@@ -22,7 +22,7 @@ runtime: shiny
 #####################################
 # cargo las librerías
 library(flexdashboard)
-library(prophet)
+#library(prophet)
 #library(lubridate)
 library(ggplot2)
 library(DT)
@@ -107,7 +107,7 @@ sliderInput('ndias','Dias hacia el futuro del pronostico:',min=5, max=365,value=
 
 ## pronosticos_con_facebook
 
-```{r forecast}
+```{r eval=FALSE}
 #dcreamos la data frame de entrada a prophet
 datafore<-reactive({
   #datlog <- data.frame(as.Date(index(idval())),log(idval()[,c(5)])) 
@@ -128,5 +128,35 @@ renderDygraph({
    dyplot.prophet(m,forecast)
 })
 
+
+```
+
+
+```{r otro}
+library(forecast)
+
+# si no tengo prophet
+datafore<-reactive({
+  dat<-xts(idval()[,c(4)], order.by = as.Date(index(idval(), format = "%d/%m/%Y")))
+  #datlog <- data.frame(as.Date(index(idval())),(idval()[,c(4)])) 
+  #rownames(datlog) <- NULL
+  #colnames(datlog)<-c("ds","y") # nombres que debe tener ds y
+  return(dat)
+})
+
+#datafore
+
+renderPlot({
+  fc <- forecast(ets(datafore()),h=input$ndias)
+   autoplot(fc)
+})
+
+# grafico 2
+renderPlot({
+  y<-as.ts(datafore())
+  fit <- tslm(y ~ trend)
+  plot(forecast(fit,h=input$ndias))
+
+})
 ```
 

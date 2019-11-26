@@ -399,17 +399,43 @@ class: animated, jackInTheBox
 
 ![input shiny](imag/basicwidgets.png)
 
-
 ---
+
+# código de entrada de inputs
 
 ![](imag/inputshiny.png)
 
 ---
+
+# Outputs
+
+Para que la variable reaccione en la app, hay que insertarla dentro de una output, que indica objetos que dibuja el servidor.
+
+
+
+---
+
+# PRÁCTICA 4
+
+## Insertar inputs y output
+
+- creamos una aplicacion para imagenes
+- creamos una aplicacion sobre un mapa leaflet 
+
+![app4](imag/app4.png)
+
+---
+
+
+---
 # Diseño
 
-## themes flexdashboard
+## temas predefinidos 
 
 - <http://www.sangerw.com/blog/flexdashboardthemes/>
+
+## iconos
+
 
 ---
 class: animated, jackInTheBox
@@ -431,61 +457,21 @@ class: animated, jackInTheBox
 
 ---
 
-background-image: url(imag/fondo6.jpg)
-background-size: cover
-
-# diferencias entre Shiny vs Flexdashboard
-
-.pull-left[
-
-## shiny
- 
-- Codigo especifico UI
-- no muy fácil
-- dinámico
-- Bootstrap
-
-]
-
-.pull-right[
-
-##Flexdashboard
-
-- Rmarkdown
--super facil
-- dinámico o estático
-- CSS
-]
-
----
-
 # Publicar la app
 
-Después de crear la app con shiny se puede alojar en <ShinyApps.io> es la opción más sencilla. La cuenta gratuita da derecho a 5 app en el servidor.
-
-Otras opciones son RSTUDIO connect, o crearse un servidor Shiny propio en el que publicar, pr ejemplo en mi blog teneis cómo hacerlo en AWS
-
-### webs estáticas o con crosstalk
-
-- mandar html
-- RPubs
-- Servidor propio
-
-### webs Shiny
-- shinyapp.io
-- AWS
-- RSTUDIOcloud
-- Serividor propio
-
-
-```{r echo=FALSE, out.width = "600px", out.height="150px",fig.align='center'}
-knitr::include_graphics("imag/firststep.jpg")
-```
+Opciones:
+- para app sin Shiny
+ - mandar html
+ - RPubs
+- <ShinyApps.io> es la opción más sencilla. 5 app gratis!!!
+- <aws> Instalar y [crear tu propio servidor Gratis en AWS](https://enrdados.netlify.com/post/instalar-r-shiny-en-aws/)   
+- crear tu servidor en casa
+- otras muchas opciones de pago en RSTUDIOcloud etc..
 
 ---
 class: inverse, center, middle,animated, jackInTheBox
 
-# Si tienes talento, no lo uses para llegar más lejos, úsalo para llegar más acompañado
+# Esto es todo amigos
 
 Muchas Gracias!!
 
