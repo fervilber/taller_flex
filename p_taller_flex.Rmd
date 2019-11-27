@@ -286,7 +286,7 @@ knitr::include_graphics("imag/aempezar.gif")
 
 ---
 
-# Practica 1 resultado 
+# Práctica 1 resultado 
 
 ![app1](imag/app1.png)
 
@@ -384,8 +384,8 @@ Se usa de manera muy simple compartiendo unos datos con la función: *highlight_
 
 # Interacción III - Práctica 3
 
-
 ![app3](imag/app3.png)
+
 ---
 # Empezamos con Shiny
 
@@ -411,7 +411,7 @@ class: animated, jackInTheBox
 
 ---
 
-# código de entrada de inputs
+# Inputs
 
 ![](imag/inputshiny.png)
 
@@ -419,71 +419,66 @@ class: animated, jackInTheBox
 
 # Outputs
 
-Para que la variable reaccione en la app, hay que insertarla dentro de una output, que indica objetos que dibuja el servidor y que están relacionados intimamente con tipos de salida de R.
+Para que la variable reaccione en la app, hay que insertarla dentro de un objeto *output*, que indica objetos que dibuja el servidor y que están relacionados intimamente con tipos de salida de R.
 
-![render](https://bookdown.org/weicheng/shinyTutorial/images/outputs.png)
-
----
-
-# PRÁCTICA 4
-
-## Insertar inputs y output
-
-- creamos una aplicacion para imagenes
-- creamos una aplicacion sobre un mapa leaflet 
-
-![app4](imag/app4.png)
+![render](imag/outputs.png)
 
 ---
 
+# PRÁCTICA 4. App shiny 
+
+- [creamos una aplicación de tratamiento de imágenes](http://35.180.138.205/shiny/rstudio/taller_flex/app4.Rmd)
+- creamos una aplicación sobre un mapa leaflet 
+
+![app4](imag/app4_1.png)
+
+---
+# PRÁCTICA 5. 
+# Hacerse rico ¿con R?
+
+- [App de Bolsa con R](http://35.180.138.205/shiny/rstudio/taller_flex/app5.Rmd)
+
+
+![app5](imag/app5.png)
 
 ---
 # Diseño
 
-## temas predefinidos 
+## Temas predefinidos 
 
 - <http://www.sangerw.com/blog/flexdashboardthemes/>
 
 ## iconos
 
+Los iconos los puedes buscar aqui:
+
+ - [Font Awesome](https://fortawesome.github.io/Font-Awesome/icons/)
+ - [Ionicons](http://ionicons.com/)
+ - [Bootstrap Glyphicons](https://getbootstrap.com/components/#glyphicons)
+
 
 ---
 class: animated, jackInTheBox
 
-# Recursos
-
-* https://github.com/rstudio-education/shiny-wsds18/blob/master/04-dashboards/04-dashboards.pdf
-* http://arm.rbind.io/slides/flexdashboard.html#1
-
-* https://jenthompson.me/resources/
-* https://rstudio-education.github.io/shiny-wsds18/
-* https://github.com/jmcphers/flexdashboard-talk/blob/master/flexdashboards.Rmd
-* https://github.com/rstudio-education/shiny-wsds18/blob/master/02-reactivity/02-reactivity.pdf
-
-* https://github.com/rstudio-education/arm-workshop-rsc2019
-* iconos en :https://fontawesome.com/icons?d=gallery&q=gra&m=free
-* https://ionicons.com/
-* http://www.htmlwidgets.org/
-
----
-
 # Publicar la app
 
 Opciones:
-- para app sin Shiny
- - mandar html
+- **NO Shiny:**
+ - html
  - RPubs
-- <ShinyApps.io> es la opción más sencilla. 5 app gratis!!!
-- <aws> Instalar y [crear tu propio servidor Gratis en AWS](https://enrdados.netlify.com/post/instalar-r-shiny-en-aws/)   
-- crear tu servidor en casa
-- otras muchas opciones de pago en RSTUDIOcloud etc..
+- **SI Shiny:** 
+ - [https://www.shinyapps.io/](shinyapps.io) es la opción más sencilla. 5 app gratis!!!
+ - [AWS](https://aws.amazon.com/es/) Instalar y [crear tu propio servidor Gratis en AWS](https://enrdados.netlify.com/post/instalar-r-shiny-en-aws/)   
+ - crear tu servidor en casa
+ - otras muchas opciones de pago en [RSTUDIOcloud](https://rstudio.cloud/) etc..
 
 ---
 class: inverse, center, middle,animated, jackInTheBox
 
 # Esto es todo amigos
 
+![fin](imag/bugs-bunny.jpg)
+
 Muchas Gracias!!
 
-`r icon::fa('paper-plane')`
 
