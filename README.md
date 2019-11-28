@@ -45,7 +45,7 @@ Por favor, traiga su propio portátil con R, RSTUDIO así como las siguientes li
 Para instalar los paquetes puedes usar este script:
 
 ```YAML
-paquetes<-c("flexdashboard", "Shiny", "crosstalk",	"leaflet", "plotly",	"DT", "ggplot2", ,"dygraphs", "crosstalk", "purrr", "magick", "quantmod", "forecast")
+paquetes<-c("flexdashboard", "Shiny", "crosstalk",	"leaflet", "plotly",	"DT", "ggplot2", "dygraphs", "crosstalk", "purrr", "magick", "quantmod", "forecast")
 install.packages(paquetes)
 
 ```
