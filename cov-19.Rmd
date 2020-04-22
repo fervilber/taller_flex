@@ -1,0 +1,242 @@
+---
+title: "Informe COV-19"
+output:
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    logo: "imag/logoR.png"
+    social: menu
+    #source_code: embed
+    theme: united
+runtime: shiny 
+---
+
+```{r setup, include=FALSE}
+
+# Informe Conronavirus
+# Fernando Villalba
+#####################################
+# cargo las librerías
+library(flexdashboard)
+library(ggplot2)
+library(DT)
+library(lubridate)
+library(xts)
+library(dygraphs)
+#library(plotly)
+library(leaflet)
+#library(dplyr)
+library(data.table)
+# lectura de los datos
+library (readr)
+#library(prophet)
+# leemos los ultimos datos disponibles de 
+#https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data
+
+  urlfile="https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv"
+  misdatos<-read_csv(url(urlfile))
+# MUERTES POR CORONAVIRUS
+  urlmuerte="https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv"
+  misdatos2<-read_csv(url(urlmuerte))
+```
+
+# entradas {.sidebar }
+
+```{r}
+#selectInput('valor', 'Selecciona un valor', unique(datosvalores$df.control$ticker) ,multiple=F)
+valores<-names(misdatos)
+# seleccion de pais
+selectInput('paises', 'Selecciona Estado:', unique(misdatos[2]) ,multiple=F,selected = "Spain")
+
+# para seleccionar las fechas
+selectInput('fecha_selec', 'Selecciona fecha de datos:', rev(tail(valores,length(valores)-4)) ,multiple=F,selected = 1)
+
+# indica la ultima fecha
+renderPrint({
+  HTML(paste0("Última fecha:", names(misdatos[,ncol(misdatos)])))
+})
+
+
+# entrada de dias de pronostico
+sliderInput('ndias','Dias de pronostico:',min=2, max=100,value=10)
+
+```
+
+# Gráfico {data-icon="fa-chart-area"}
+
+## Informe COV-19
+
+### Evolución
+
+```{r resum}
+# selecciona la fecha de datos
+dt_ultimos<-reactive({
+  #data <- misdatos[c(2,ncol(misdatos))]
+  data <- misdatos[c('Country/Region',input$fecha_selec)]
+  colnames(data)<-c("x","y")
+  data <- aggregate(. ~ x,data,sum)
+  data$y<-as.numeric(data$y)
+  data<-data[order(data$y, decreasing = TRUE),]
+  data$x<- factor(data$x,levels=data$x)
+  return(data)
+})
+
+#ggplot(head(data,10),aes(x=x,y=y,fill=rainbow(10)))+geom_bar(stat="identity")+ theme(legend.position="none")
+
+output$garf<-renderPlot({
+#  barplot(head(dt_ultimos(),12))
+    p<-ggplot(head(dt_ultimos(),12), aes(x=x,y=y,fill=rainbow(12)))+
+                   geom_bar(stat="identity") +
+                   theme(legend.position="none") +
+                   labs(y = paste0("Nuevas infecciones ",input$fecha_selec),
+                        x= "paises")
+  
+    p
+})
+
+plotOutput("garf")  
+```
+
+> Numero de casos confirmados en la fecha seleccionada
+
+### Gráfica por pais
+
+```{r graficas}
+#pifiltro de datos
+st<-reactive({
+  data <- misdatos[misdatos[2]=='Spain',]#input$paises,]
+  data<-data[c(-1,-2,-3,-4)]
+  data1<-transpose(data)
+  data1$fecha <- as.Date(mdy(colnames(data)))
+  st<-xts(x = data1[1], order.by = data1$fecha)
+  colnames(st)<-c("Confirmados")
+  return(st)
+})
+
+st2<-reactive({
+  data <- misdatos2[misdatos2[2]==input$paises,]
+  data<-data[c(-1,-2,-3,-4)]
+  data1<-transpose(data)
+  data1$fecha <- as.Date(mdy(colnames(data)))
+  st<-xts(x = data1[1], order.by = data1$fecha)
+  colnames(st)<-c("Muertes")
+  return(st)
+})
+
+
+#pintamos la gráfica con dygraph
+output$plot1 <-  renderDygraph({
+  seriet<-cbind(st(),st2())
+  
+  dygraph(seriet,main =paste0("Evolución de casos confirmados COV-19 en ",input$paises) ) %>%
+  dyOptions(stackedGraph = TRUE)  %>% dyRangeSelector()
+})
+dygraphOutput("plot1")  
+```
+
+
+
+# Datos {data-icon="fa-database"}
+
+### tabla de datos
+
+```{r tablaa}
+# pinta la tabla
+DT::renderDataTable({
+  #data <- idval()
+  DT::datatable(misdatos, options = list(
+    bPaginate = TRUE,autoWidth = TRUE
+  ))
+})
+
+```
+
+> tabla de datos number of confirmed cases
+
+# Mapa {data-icon="fa-map"}
+
+```{r mapaa}
+dt_map<-reactive({
+  #data <- misdatos[c(2,ncol(misdatos))]
+  data <- misdatos[c('Country/Region','Lat', 'Long', input$fecha_selec)]
+  data <- misdatos[c('Country/Region','Lat', 'Long', '3/11/20')]
+  data[5]<-sqrt(data[4])/2#data[4]/max(data[4])*40
+  colnames(data)<-c("zona","Lat", "Long","infectados","size")
+  
+  #data <- aggregate(. ~ x,data,sum)
+  #data$y<-as.numeric(data$y)
+  #data<-data[order(data$y, decreasing = TRUE),]
+  #data$x<- factor(data$x,levels=data$x)
+  return(data)
+})
+
+
+#renderPrint({dt_map()})
+output$map <- renderLeaflet({
+  pal <- colorNumeric(palette = "Spectral", domain = c(dt_map()[5]), reverse = TRUE)
+  
+  leaflet(dt_map()) %>%
+    addTiles() %>%
+        addProviderTiles(providers$OpenStreetMap, group = "OSM")  %>%
+        addProviderTiles("Stamen.TonerLite",group = "Toner") %>%
+        addProviderTiles("HikeBike", group = "Bike") %>% 
+        addProviderTiles("Esri", group = "Esri") %>%
+        addProviderTiles("Stamen.Watercolor", group="Acuarela") %>%
+    addLayersControl(baseGroups = c("OSM","Toner", "Bike", "Esri","Acuarela")) %>%
+   # addMarkers(data = misdatos)
+   addCircleMarkers(radius = ~size,color = ~pal(size),fill = ~pal(size),popup= ~paste0(infectados, " infectados en ",zona))
+
+})
+
+leafletOutput('map') 
+
+```
+
+> mapa interactivo con Shiny
+
+# Pronósticos {data-icon="fa-chart-line"}
+
+
+## Pronosticos 
+
+Estamos trabajando en ello, dentro de poco tendremos un prnostico de los datos
+```{r}
+
+```
+
+```{r pronostico, eval=FALSE}
+library(forecast)
+#dcreamos la data frame de entrada a prophet
+datafore<-reactive({
+  #st<-xts(x = data1[1], order.by = data1$fecha)
+  
+  datlog <- as.data.frame(st())
+  colnames(datlog)<-c("y") # nombres que debe tener ds y
+  #rownames(as.data.frame(st))
+  datlog$ds<-rownames(datlog)
+  datlog<-data.frame(ds=datlog$ds,y=datlog$y)
+  #rownames(datlog) <- NULL
+  return(datlog)
+})
+
+#renderPrint({datafore()})
+# usamos la salida de dygraph
+renderDygraph({
+  m<-prophet(datafore())
+  future_val<-make_future_dataframe(m,periods = input$ndias)
+  forecast<-predict(m,future_val)
+  
+   #plot(m,forecast)
+   #prophet_plot_components(m, forecast)
+   dyplot.prophet(m,forecast)
+})
+
+```
+
+
+# Contacto
+
+Informe realizado por [Ferran VB](https://enrdados.netlify.com/), usado [R]()
+
+
+
