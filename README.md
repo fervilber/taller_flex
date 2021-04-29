@@ -10,7 +10,7 @@ output:
 # Taller: Shiny fácil con flexdashboard
 
 
-Cómo hacer aplicaciones web dinámicas con R.
+Cómo hacer aplicaciones web dinámicas con R. Ver presentación del taller [aquí](https://fervilber.github.io/taller_flex/p_taller_flex.html).
 
 ## DESCRIPCION DEL TALLER
 [flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/)  es una extensión de *RMarkdown* para realizar informes web que denominados genéricamente tableros o paneles.
